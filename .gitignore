@@ -1,0 +1,51 @@
+# macOS
+.DS_Store
+
+# Editor and tool state
+.claude/
+.vscode/
+.idea/
+.ruff_cache/
+*.swp
+
+# Generated figures (regenerate with paper_figures/make_all.py)
+figures/*.png
+figures/*.pdf
+
+# Reference PDFs (copyrighted; local-only library)
+references/
+
+# Third-party benchmark distribution (IWA BSM1 MATLAB/Simulink files, under
+# its own licence agreement). The inputs the scripts need are in data/.
+BSM1_R2019b/
+
+# Internal working notes (reviews, trackers, summaries), not part of the paper
+consistency_review_*.md
+morning_summary_*.md
+prose_batch*_review_*.md
+nomenclature_review_*.md
+simulated_review_*.md
+response_to_reviewers_*.md
+
+# LaTeX build artifacts (main and graphical abstract)
+paper/*.aux
+paper/*.bbl
+paper/*.blg
+paper/*.fdb_latexmk
+paper/*.fls
+paper/*.log
+paper/*.out
+paper/*.synctex.gz
+paper/*.toc
+paper/main.pdf
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+.ipynb_checkpoints/
+
+# Throwaway probes and diagnostics (keeping the script that produced
+# data/bsm1_dry_influent.csv from the official BSM1 influent file)
+paper_figures/_*.py
+!paper_figures/_extract_dry_influent.py

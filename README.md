@@ -1,0 +1,284 @@
+# A runtime-configurable, automatically differentiable engine for wastewater treatment process models
+
+This repository holds the manuscript and the reproduction code for the paper
+*A runtime-configurable, automatically differentiable engine for wastewater
+treatment process models* (C. T. DeGroot, Western University).
+
+The paper presents **aquakin**, a kinetics engine in which a reaction model is
+declared as data (a YAML file), each rate law is compiled through JAX into a
+differentiable function, and unit operations compose into a plant that is one
+differentiable program. The paper validates the engine on ASM1, the open-loop
+BSM1 benchmark and an ADM1 digester, and uses its exact gradients for
+calibration, identifiability analysis and experimental design.
+
+The engine itself is **not** in this repository. It lives in the separate
+aquakin library: <https://github.com/DeGrootResearchGroup/aquakin>. This
+repository contains only what is specific to the paper: the analysis and figure
+scripts, the benchmark reference data, the cached results, and the LaTeX source.
+
+## Repository layout
+
+```
+data/            input data read by the scripts (BSM1 references, parameters,
+                 influent; a test network; digitized respirograms)
+paper/           LaTeX manuscript, bibliography, generated macros and tables,
+                 graphical abstract
+paper_figures/   one script per figure, the table/value generators, and the
+                 shared helpers in common.py
+results/         cached computed results, one small JSON file per analysis
+LICENSE          MIT licence (code)
+LICENSE-CC-BY-4.0  CC BY 4.0 licence (manuscript, figures, results)
+```
+
+A `figures/` directory is created when the scripts run. It holds the generated
+figures (PNG and PDF) and is not tracked.
+
+### `data/`
+
+| file | contents |
+|---|---|
+| `bsm1_openloop_ss_reference.json` | published open-loop BSM1 steady-state reference values |
+| `bsm1_openloop_dyn_reference.json` | published open-loop BSM1 dry-weather dynamic reference (effluent averages, days 7–14) |
+| `bsm1_asm1_parameters.json` | the fixed BSM1 ASM1 kinetic and stoichiometric parameter set (15 °C) |
+| `bsm1_dry_influent.csv` | BSM1 dry-weather influent, 15-minute samples, in aquakin's ASM1 species order |
+| `decay.yaml` | two-species first-order decay network used in the verification figure |
+| `gupta2018_fig4-1_OUR_digitized.csv` | digitized oxygen-uptake-rate respirograms (raw wastewater, primary-clarifier effluent, rotating-belt-filter effluent) |
+
+### `paper/`
+
+| file | contents |
+|---|---|
+| `main.tex` | the manuscript |
+| `references.bib` | bibliography |
+| `arxiv.sty` | page style |
+| `asm1_compact.yaml` | ASM1 excerpt shown as a listing in the paper |
+| `generated_values.tex` | every number quoted in the text, as LaTeX macros (generated) |
+| `validation_tables.tex` | per-species BSM1 validation tables (generated) |
+| `graphical_abstract.tex`, `graphical_abstract.pdf` | graphical abstract source and compiled PDF |
+| `ga_300.png`, `ga_grayscale.png`, `ga_legibility_13cm.png` | raster renders of the graphical abstract |
+
+### `paper_figures/`
+
+| script | output | cache key(s) |
+|---|---|---|
+| `fig_verification.py` | closed-form decay, exact gradient, conservation, and plant gradient checks | `verification` |
+| `fig_plant_fd.py` | plant gradient: discrete adjoint vs central finite difference, step-size sweep | `verification` (reads it) |
+| `fig_bsm1_steady.py` | open-loop BSM1 steady state vs the published reference | `bsm1_steady` |
+| `fig_bsm1_dynamic.py` | open-loop BSM1 dry-weather dynamic effluent vs the reference | `bsm1_dynamic` |
+| `fig_steady_solver.py` | ADM1 digester: pseudo-transient continuation, arclength continuation through the washout fold, steady-state sensitivity | `steady_solver`, `steady_unstable` |
+| `fig_digester_validation.py` | standalone ADM1 digester steady state and charge-balance pH check | `digester_validation` |
+| `fig_differentiability.py` | gradient-based parameter recovery and sensitivity on a single reactor | `differentiability` |
+| `fig_calibration.py` | multi-parameter ASM1 calibration from noisy batch assays | `calibration` |
+| `fig_identifiability.py` | practical identifiability from the exact Fisher information | `identifiability` |
+| `fig_design.py` | gradient-based design of the calibration experiment | `design` (also reads `calibration`) |
+| `fig_respirometry.py` | two heterotroph model structures calibrated to measured respirograms | `respirometry` |
+| `fig_ad_vs_fd.py` | exact gradient vs finite differences: accuracy and cost | `ad_vs_fd` |
+| `fig_performance.py` | compile and solve times, gradient cost, scaling with network size | `performance` |
+| `conservation_check.py` | stoichiometric conservation audit of ASM1 (no figure) | `conservation` |
+| `make_validation_tables.py` | writes `paper/validation_tables.tex` | reads the caches |
+| `make_paper_values.py` | writes `paper/generated_values.tex` | reads the caches |
+| `make_all.py` | runs all of the above in order | — |
+| `common.py` | paths, BSM1 data loaders, the result cache, aquakin provenance check, plotting setup | — |
+| `_extract_dry_influent.py` | provenance only: the script that produced `data/bsm1_dry_influent.csv` from the official BSM1 influent file (not included here) | — |
+
+## Requirements
+
+- Python 3.11 or newer (JAX 0.10 requires it).
+- The aquakin dependencies: JAX and jaxlib (≥ 0.10), Diffrax (≥ 0.7),
+  Optimistix, Pydantic, PyYAML, NumPy and SciPy.
+- Matplotlib, for the figures.
+- A LaTeX distribution with `latexmk`, BibTeX and TikZ, to build the paper.
+
+For example:
+
+```bash
+pip install "jax>=0.10" "jaxlib>=0.10" "diffrax>=0.7" optimistix pydantic pyyaml numpy scipy matplotlib
+```
+
+### The pinned aquakin release
+
+The paper describes the aquakin **0.1.1** release, and every computed result
+must come from that exact commit. The pin is set in `paper_figures/common.py`:
+
+```python
+AQUAKIN_PINNED_TAG = "v0.1.1"
+AQUAKIN_PINNED_COMMIT = "e198ec1"
+```
+
+Until the `v0.1.1` tag is published, the release is identified by commit
+`e198ec1` on aquakin's `main` branch. When the tag is cut, check out the tag
+instead of the commit; this README and `common.py` will be updated then.
+
+Clone aquakin next to this repository and check the pinned commit out as a
+detached worktree:
+
+```bash
+git clone https://github.com/DeGrootResearchGroup/aquakin.git ../aquakin
+```
+
+```bash
+git -C ../aquakin worktree add --detach ../aquakin-v0.1.1 e198ec1
+```
+
+Then put that checkout first on `PYTHONPATH` whenever you run the scripts:
+
+```bash
+PYTHONPATH=../aquakin-v0.1.1 python3 paper_figures/make_all.py
+```
+
+Before computing anything, `common.load_or_compute` checks the imported
+aquakin. It refuses to compute if aquakin is at any other commit, or if the
+checkout has local edits. You can override this with `AQUAKIN_ALLOW_UNPINNED=1`,
+but results computed that way are not the paper's results. Each
+`results/<name>.json` records the aquakin version, commit, dirty flag and path
+it was computed with, under the `_aquakin` key.
+
+Some of the caches currently in `results/` were computed against earlier aquakin
+commits; their `_aquakin.commit` field shows which. All of them will be
+recomputed against the tagged `v0.1.1` release, and this note removed, before
+the paper is finalized.
+
+## Reproducing the paper
+
+All commands below run from the repository root.
+
+### Figures, numbers and tables from the cached results
+
+```bash
+PYTHONPATH=../aquakin-v0.1.1 python3 paper_figures/make_all.py
+```
+
+`make_all.py` runs every figure script, then the conservation audit, then the
+two generators. Each script reads its cached result from `results/` when the
+file exists, so no simulation is re-run. This step is fast. It writes the
+figures to `figures/` and regenerates `paper/generated_values.tex` and
+`paper/validation_tables.tex`.
+
+To run one figure on its own:
+
+```bash
+PYTHONPATH=../aquakin-v0.1.1 python3 paper_figures/fig_bsm1_steady.py
+```
+
+### Recomputing results
+
+Set `RECOMPUTE` to `all`, or to a comma-separated list of cache keys from the
+table above:
+
+```bash
+RECOMPUTE=all PYTHONPATH=../aquakin-v0.1.1 python3 paper_figures/make_all.py
+```
+
+```bash
+RECOMPUTE=bsm1_steady PYTHONPATH=../aquakin-v0.1.1 python3 paper_figures/fig_bsm1_steady.py
+```
+
+A full recompute takes much longer than the cached run. After recomputing a
+cache, rerun `make_all.py` (or at least `make_validation_tables.py` and
+`make_paper_values.py`) so the macros and tables match.
+
+Every number in the manuscript comes from `paper/generated_values.tex`, which
+`make_paper_values.py` builds from the caches. No value in the paper is typed by
+hand.
+
+### Timing benchmarks
+
+Three caches contain wall-clock timings: `steady_solver`, `performance` and
+`ad_vs_fd`. The timings depend on the machine. Recompute each one alone, on an
+otherwise idle machine, so other work does not distort them:
+
+```bash
+RECOMPUTE=performance PYTHONPATH=../aquakin-v0.1.1 python3 paper_figures/fig_performance.py
+```
+
+Your timings will differ from the paper's. `steady_unstable` is kept separate from
+`steady_solver` so the unstable-branch diagnostics can be recomputed without
+re-running the timings.
+
+### Building the paper
+
+Generate the figures first: `main.tex` reads them from `../figures/`.
+
+```bash
+cd paper && latexmk -pdf main.tex
+```
+
+`main.tex` includes `graphical_abstract.pdf`, which is tracked. To rebuild it
+from its TikZ source:
+
+```bash
+cd paper && latexmk -pdf graphical_abstract.tex
+```
+
+## Data provenance
+
+- **BSM1.** The steady-state and dynamic reference values, the ASM1 parameter
+  set and the dry-weather influent come from the official IWA BSM1
+  distribution (MATLAB/Simulink implementation by U. Jeppsson, Lund
+  University). Each JSON file in `data/` has a `_source` field naming the
+  benchmark file it was taken from and how it was converted.
+  `paper_figures/_extract_dry_influent.py` documents how
+  `data/bsm1_dry_influent.csv` was built from the benchmark influent file.
+  The BSM1 distribution is not needed to reproduce the paper.
+- **ADM1 digester.** The BSM2 digester feed and the published digester steady
+  state used in the ADM1 figures are written as constants in
+  `paper_figures/fig_steady_solver.py`.
+- **Respirograms.** The three oxygen-uptake-rate curves in
+  `data/gupta2018_fig4-1_OUR_digitized.csv` were digitized from Gupta et al.
+  (2018), *Application of Respirometric Techniques to Determine COD
+  Fractionation and Biokinetic Parameters of Sieved Wastewater*, WEFTEC 2018,
+  and from M. Gupta's Ph.D. dissertation, *Microsieving as a Primary Treatment
+  for Biological Nitrogen Removal from Municipal Wastewater* (University of
+  Western Ontario, 2018). The paper's Methods section says which curve came
+  from which source.
+
+If anything here differs from the paper's Software and data availability
+statement, the paper is the authority.
+
+## License
+
+The repository uses two licences, plus third-party data that neither covers.
+
+**Code: MIT** ([`LICENSE`](LICENSE)). This covers:
+- everything in `paper_figures/`;
+- `data/decay.yaml`;
+- `paper/asm1_compact.yaml`, an excerpt of aquakin's ASM1 model file (aquakin is also MIT-licensed);
+- `paper/arxiv.sty`.
+
+**Written work, figures and results: CC BY 4.0**
+([`LICENSE-CC-BY-4.0`](LICENSE-CC-BY-4.0)). This covers:
+- the manuscript and everything else in `paper/` not listed above;
+- the figures the scripts generate;
+- the cached results in `results/`;
+- this README.
+
+**Third-party data, not covered by either licence.** These files are
+redistributed only so the paper can be reproduced. Their rights stay with
+their original owners:
+- `data/bsm1_openloop_ss_reference.json`, `data/bsm1_openloop_dyn_reference.json`,
+  `data/bsm1_asm1_parameters.json` and `data/bsm1_dry_influent.csv` are taken
+  from the Benchmark Simulation Model No. 1 (BSM1). BSM1 is the property of the
+  IWA Task Group on Benchmarking of Control Strategies for WWTPs, and these
+  files come from its implementation by the Department of Industrial
+  Electrical Engineering and Automation, Lund University (U. Jeppsson, C.
+  Rosen and others). If you use them, cite Alex et al. (2008), *Benchmark
+  Simulation Model no. 1 (BSM1)*, and acknowledge the Lund University
+  implementation.
+- `data/gupta2018_fig4-1_OUR_digitized.csv` is digitized from the Gupta (2018)
+  sources listed under [Data provenance](#data-provenance). Cite those sources
+  if you use it.
+- The BSM2 digester feed and reference steady state written into
+  `paper_figures/fig_steady_solver.py` are published benchmark values. Cite
+  them as the paper does.
+
+## How to cite
+
+<!-- TODO (author): replace with the journal reference and DOI once published. -->
+
+Please cite the paper:
+
+> C. T. DeGroot. *A runtime-configurable, automatically differentiable engine
+> for wastewater treatment process models.* (Citation details to be added on
+> publication.)
+
+To cite the software, cite the aquakin release described in the paper (0.1.1).
