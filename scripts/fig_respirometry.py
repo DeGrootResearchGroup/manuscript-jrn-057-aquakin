@@ -3,7 +3,7 @@
 The real-measurement counterpart to the synthetic twin-experiment calibration
 (fig_calibration). The same exact-gradient estimator calibrates TWO different
 heterotroph model structures -- swapped by editing the YAML network, nothing else
--- to the same three digitized OUR respirograms (Gupta 2018, Run #1; filtered
+-- to the same three digitized OUR respirograms (Gupta 2018 thesis, Fig. 4-1, Run #1; filtered
 municipal wastewater, ATU-inhibited so heterotrophs only):
 
   * REDUCED (ASM1 heterotrophic aerobic core with death-regeneration): growth on
