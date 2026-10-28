@@ -78,18 +78,18 @@ wastewater treatment process models}
 \maketitle
 
 \begin{abstract}
-Wastewater simulators are configured to compute solutions, not derivatives, so calibration relies on derivative-free search and sensitivity on finite differencing. We present \texttt{aquakin}, an open-source engine in which a reaction model, declared as plain text, is reconfigurable at run time and differentiable end to end. Each rate law is parsed into a syntax tree and compiled into a differentiable function, never executed as code. Units compose into a plant that is one differentiable program, so the exact gradient of any output with respect to all parameters costs one reverse pass. The engine reproduces the open-loop Benchmark Simulation Model No.~1, matching the dry-weather effluent averages to \DynEffWorstPct\,\% and the operational cost index to \DynOCIPct\,\%. In twin experiments on the model's own noisy data, it recovers activated-sludge kinetics with no bias beyond sampling error (at most \CalWorstBias\,\%), attaches uncertainties that match the realized spread, and reads which parameters the design identifies. Calibration and identifiability become direct computations.
+Wastewater simulators compute solutions, not derivatives, so calibration and sensitivity analysis rely on derivative-free search and finite differences. We present \texttt{aquakin}, an open-source engine in which a plain-text reaction model is reconfigurable at run time and differentiable end to end. Each rate law is compiled from a syntax tree into a differentiable function, never executed as code, and units compose into a plant that is one differentiable program. The engine reproduces the open-loop Benchmark Simulation Model No.~1 to \DynEffWorstPct\,\% in the dry-weather effluent averages, and the benchmark anaerobic digester to \DigWorstPct\,\%. An exact gradient over all \PerfNparams\ plant parameters costs \PerfADFactor\ solves. A differentiable steady-state solver traces the digester through its washout fold. In twin experiments the gradients recover activated-sludge kinetics without bias beyond sampling error, with uncertainties matching the realized spread, and identify and optimize what a design determines. On measured respirograms they discriminate two model structures.
 \keywords{differentiable simulation, automatic differentiation, reaction models, activated sludge, BSM1, scientific software}
 \end{abstract}
 
 % Highlights (Elsevier: 3-5 bullets, each <= 85 characters incl. spaces).
 \section*{Highlights}
 \begin{itemize}\setlength\itemsep{1pt}
-\item Reaction models are declared in text at run time; changing one needs no recompile
-\item Rate laws are parsed to a syntax tree and compiled to JAX, safe and differentiable
-\item A whole flowsheet is one differentiable program: any output gradient to any input
-\item Reproduces open-loop BSM1: steady state, and the dry-weather effluent averages
-\item Exact gradients make calibration and identifiability computations, not searches
+\item Reaction models are plain-text data, edited and rerun with no code generation
+\item Rate laws are parsed to syntax trees and compiled to JAX: safe and differentiable
+\item A whole plant is one differentiable program; an exact gradient costs about 2 solves
+\item Reproduces open-loop BSM1 and the BSM2 digester; continuation traces its washout
+\item Exact gradients drive calibration, identifiability analysis and experimental design
 \end{itemize}
 
 % Graphical abstract. Source is the standalone graphical_abstract/graphical_abstract.tex,
