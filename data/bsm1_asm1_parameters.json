@@ -1,0 +1,28 @@
+{
+  "_source": "BSM1_R2019b/asm1init.m (PAR1), the official BSM1 ASM1 kinetic and stoichiometric parameter set at 15 C. BSM1 uses these fixed 15 C values directly (no temperature correction). Keys are the aquakin ASM1 parameter names; values are the BSM1 PAR1 entries. Applied at the engine reference temperature (20 C) where the Arrhenius factor is unity, so the 15 C kinetics are used as published. KLa and SO saturation are listed for completeness; aquakin's build_bsm1 already uses these (KLa = 0,0,240,240,84 d^-1; SO_sat = 8 g/m3).",
+  "asm1_parameters": {
+    "muH": 4.0,
+    "KS": 10.0,
+    "KOH": 0.2,
+    "KNO": 0.5,
+    "bH": 0.3,
+    "muA": 0.5,
+    "KNH_A": 1.0,
+    "KOA": 0.4,
+    "bA": 0.05,
+    "etag": 0.8,
+    "ka": 0.05,
+    "kh": 3.0,
+    "KX": 0.1,
+    "etah": 0.8,
+    "Y_H": 0.67,
+    "Y_A": 0.24,
+    "f_P": 0.08,
+    "i_XB": 0.08,
+    "i_XP": 0.06
+  },
+  "aeration": {
+    "KLa_d_inv": [0.0, 0.0, 240.0, 240.0, 84.0],
+    "SO_saturation_g_m3": 8.0
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "_source": "BSM1_R2019b/Results/openloop_ss.pdf -- Steady-state open-loop BSM1 reference, Matlab/Simulink implementation by U. Jeppsson, IEA, Lund University, 2009-05-21 (Matlab R2008b). Units: COD species mg COD/l; N species mg N/l; SALK mol HCO3/m3; TSS mg SS/l.",
+  "constant_influent": {
+    "SI": 30, "SS": 69.5, "XI": 51.2, "XS": 202.32, "XBH": 28.17, "XBA": 0,
+    "XP": 0, "SO": 0, "SNO": 0, "SNH": 31.56, "SND": 6.95, "XND": 10.59,
+    "SALK": 7, "TSS": 211.2675
+  },
+  "flows_m3d": {
+    "influent_wwtp": 18446, "influent_AS": 92230, "internal_recirc": 55338,
+    "settler_feed": 36892, "returned_sludge": 18446, "wastage": 385,
+    "effluent": 18061
+  },
+  "reactors": {
+    "tank1": {"SS": 2.8082, "XI": 1149.1252, "XS": 82.1349, "XBH": 2551.7658, "XBA": 148.3894, "XP": 448.8519, "SO": 0.0042984, "SNO": 5.3699, "SNH": 7.9179, "SND": 1.2166, "XND": 5.2849, "SALK": 4.9277, "TSS": 3285.0039},
+    "tank2": {"SS": 1.4588, "XI": 1149.1252, "XS": 76.3862, "XBH": 2553.3851, "XBA": 148.3091, "XP": 449.5227, "SO": 6.3132e-05, "SNO": 3.6620, "SNH": 8.3444, "SND": 0.88206, "XND": 5.0291, "SALK": 5.0802, "TSS": 3282.5463},
+    "tank3": {"SS": 1.1495, "XI": 1149.1252, "XS": 64.8549, "XBH": 2557.1314, "XBA": 148.9413, "XP": 450.4184, "SO": 1.7184, "SNO": 6.5409, "SNH": 5.5479, "SND": 0.82889, "XND": 4.3924, "SALK": 4.6748, "TSS": 3277.8534},
+    "tank4": {"SS": 0.99532, "XI": 1149.1252, "XS": 55.6940, "XBH": 2559.18, "XBA": 149.5271, "XP": 451.3147, "SO": 2.4289, "SNO": 9.2990, "SNH": 2.9674, "SND": 0.76679, "XND": 3.8790, "SALK": 4.2935, "TSS": 3273.6327},
+    "tank5": {"SS": 0.88949, "XI": 1149.1252, "XS": 49.3056, "XBH": 2559.3437, "XBA": 149.7971, "XP": 452.2111, "SO": 0.49094, "SNO": 10.4152, "SNH": 1.7333, "SND": 0.68828, "XND": 3.5272, "SALK": 4.1256, "TSS": 3269.8370}
+  },
+  "settler_effluent": {"SI": 30, "SS": 0.88949, "XI": 4.3918, "XS": 0.18844, "XBH": 9.7815, "XBA": 0.57251, "XP": 1.7283, "SO": 0.49094, "SNO": 10.4152, "SNH": 1.7333, "SND": 0.68828, "XND": 0.01348, "SALK": 4.1256, "TSS": 12.4969},
+  "settler_underflow": {"SI": 30, "SS": 0.88949, "XI": 2247.0504, "XS": 96.4143, "XBH": 5004.6542, "XBA": 292.9200, "XP": 884.2737, "SO": 0.49094, "SNO": 10.4152, "SNH": 1.7333, "SND": 0.68828, "XND": 6.8972, "SALK": 4.1256, "TSS": 6393.9844},
+  "settler_TSS_profile_top_to_bottom": [12.4969, 18.1132, 29.5402, 68.9781, 356.0747, 356.0747, 356.0747, 356.0747, 356.0747, 6393.9844],
+  "derived": {
+    "trad_sludge_age_d": 7.3155, "spec_sludge_age_d": 9.1436,
+    "total_HRT_h": 15.6118, "reactor_HRT_h": 7.8053,
+    "thickening_factor": 1.9554, "thinning_factor": 0.0038219
+  },
+  "dimensions": {
+    "V_tank_m3": [1000, 1000, 1333, 1333, 1333],
+    "aerobic": [false, false, true, true, true],
+    "settler_height_m": 4, "settler_area_m2": 1500, "settler_volume_m3": 6000
+  }
+}

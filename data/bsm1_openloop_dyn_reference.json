@@ -1,0 +1,33 @@
+{
+  "_source": "BSM1_R2019b/Results/openloop_dyn.pdf -- Dynamic open-loop BSM1 reference, dry-weather influent, performance over days 7-14 after a 500-day constant-input steady state plus a 14-day dry burn-in. Matlab/Simulink implementation by U. Jeppsson, IEA, Lund University, 2009-05-21. Two index conventions are reported by the benchmark code: 'original BSM1 version' and 'updated BSM1 version' (the update revises the aeration/pumping energy and the EQI/IQI weighting). The averaged effluent concentrations below are convention-independent.",
+  "effluent_avg_conc": {
+    "flow_m3d": 18061.3325,
+    "SI": 30, "SS": 0.97352, "XI": 4.5794, "XS": 0.22285, "XBH": 10.2208,
+    "XBA": 0.54217, "XP": 1.7572, "SO": 0.74639, "SNO": 8.8238, "SNH": 4.7589,
+    "SND": 0.72901, "XND": 0.015691, "SALK": 4.4562, "TSS": 12.9917,
+    "Kjeldahl_N": 6.7448, "total_N": 15.5686, "total_COD": 48.2958, "BOD5": 2.7746
+  },
+  "quality_indices": {
+    "IQI_original": 42042.8149, "EQI_original": 7065.6121,
+    "IQI_updated": 52081.3952, "EQI_updated": 6690.1049
+  },
+  "energy_and_sludge": {
+    "avg_sludge_disposal_kgSS_d": 2435.69,
+    "avg_total_sludge_kgSS_d": 2670.3382,
+    "avg_aeration_energy_orig_kWh_d": 6476.112,
+    "avg_aeration_energy_updated_kWh_d": 3341.3867,
+    "avg_pumping_energy_orig_kWh_d": 2966.76,
+    "avg_pumping_energy_bsm2_kWh_d": 388.17,
+    "avg_mixing_energy_kWh_d": 240
+  },
+  "operational_cost_index": {
+    "sludge_production_cost_index": 12178.45,
+    "OCI_original": 21861.322,
+    "OCI_updated": 16148.0067
+  },
+  "violations": {
+    "SNH95_gN_m3": 8.8818, "TN95_gN_m3": 18.5332, "TSS95_gSS_m3": 15.7415,
+    "TN_limit_violated_pct_time": 8.1845, "TN_limit_violations": 5,
+    "ammonia_limit_violated_pct_time": 62.5, "ammonia_limit_violations": 7
+  }
+}
