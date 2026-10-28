@@ -1,0 +1,28 @@
+model:
+  name: asm1
+  description: "Activated Sludge Model No. 1 (Henze et al. 1987)."
+
+species:
+  - {name: SS,   units: "g_COD/m3"}   # readily biodegradable substrate
+  - {name: SO,   units: "g_O2/m3"}    # dissolved oxygen
+  - {name: XB_H, units: "g_COD/m3"}   # heterotrophic biomass
+  # ... ten further species
+
+parameters:                # one shared slot each, kinetic and stoichiometric
+  muH: {value: 6.0,  bounds: [1.0, 12.0],  transform: positive_log}
+  KS:  {value: 20.0, bounds: [1.0, 200.0], transform: positive_log}
+  KOH: {value: 0.2,  bounds: [0.01, 2.0],  transform: positive_log}
+  Y_H: {value: 0.67, bounds: [0.4, 0.85],  transform: logit}
+  # ... further kinetic and stoichiometric constants
+
+expressions:               # named process rates, referenced by reactions
+  rho_hetero_aerobic: "muH * [SS]/(KS + [SS]) * [SO]/(KOH + [SO]) * [XB_H]"
+
+reactions:
+  - name: aerobic_growth_heterotrophs
+    rate: "rho_hetero_aerobic"
+    stoichiometry:          # yield-dependent coefficients written as expressions
+      SS:   "-1 / Y_H"
+      XB_H: 1.0
+      SO:   "-(1 - Y_H) / Y_H"
+      # ... SNH, SALK

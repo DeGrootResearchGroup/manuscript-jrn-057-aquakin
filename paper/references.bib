@@ -1,0 +1,589 @@
+% Bibliography for JRN-057 -- aquakin: a runtime-configurable, differentiable
+% kinetics engine for aqueous environmental systems.
+% Keys are referenced in main.tex; do not rename keys without updating the
+% \cite commands. Every cited reference has a full-text PDF in ../references
+% (indexed in references/INDEX.md), except griewank2008 and allgower2003 (physical
+% books cleared for citation without a PDF) and the companion in-preparation
+% manuscript.
+
+% =========================================================================
+% Wastewater process models and the BSM benchmark family
+% =========================================================================
+
+@techreport{henze2000,
+  author      = {Henze, M. and Gujer, W. and Mino, T. and van Loosdrecht, M. C. M.},
+  title       = {Activated Sludge Models {ASM1}, {ASM2}, {ASM2d} and {ASM3}},
+  institution = {IWA Publishing},
+  type        = {Scientific and Technical Report No. 9},
+  address     = {London},
+  year        = {2000},
+}
+
+@article{batstone2002,
+  author  = {Batstone, D. J. and Keller, J. and Angelidaki, I. and Kalyuzhnyi, S. V. and Pavlostathis, S. G. and Rozzi, A. and Sanders, W. T. M. and Siegrist, H. and Vavilin, V. A.},
+  title   = {The {IWA} Anaerobic Digestion Model No 1 ({ADM1})},
+  journal = {Water Science and Technology},
+  volume  = {45},
+  number  = {10},
+  pages   = {65--73},
+  year    = {2002},
+}
+
+@inproceedings{gupta2018,
+  author    = {Gupta, M. and Giaccherini, F. and Sridhar, G. R. D. and Batstone, D. and Santoro, D. and Nakhla, G.},
+  title     = {Application of Respirometric Techniques to Determine {COD} Fractionation and Biokinetic Parameters of Sieved Wastewater},
+  booktitle = {Proceedings of the Water Environment Federation Technical Exhibition and Conference (WEFTEC 2018)},
+  publisher = {Water Environment Federation},
+  address   = {New Orleans, LA},
+  year      = {2018},
+}
+
+@article{guisasola2005,
+  author  = {Guisasola, A. and Sin, G. and Baeza, J. A. and Carrera, J. and Vanrolleghem, P. A.},
+  title   = {Limitations of {ASM1} and {ASM3}: a comparison based on batch oxygen uptake rate profiles from different full-scale wastewater treatment plants},
+  journal = {Water Science and Technology},
+  volume  = {52},
+  number  = {10-11},
+  pages   = {69--77},
+  year    = {2005},
+}
+
+@article{karahangul2003,
+  author  = {Karahan-G\"{u}l, \"{O}. and van Loosdrecht, M. C. M. and Orhon, D.},
+  title   = {Modification of {ASM3} considering direct growth on primary substrate},
+  journal = {Water Science and Technology},
+  volume  = {47},
+  number  = {11},
+  pages   = {219--225},
+  year    = {2003},
+}
+
+@phdthesis{gupta2018thesis,
+  author = {Gupta, M.},
+  title  = {Microsieving as a Primary Treatment for Biological Nitrogen Removal from Municipal Wastewater},
+  school = {University of Western Ontario},
+  type   = {Ph.D. dissertation},
+  note   = {Electronic Thesis and Dissertation Repository 5288},
+  year   = {2018},
+}
+
+@article{henze1987,
+  author  = {Henze, M. and Grady, C. P. L. and Gujer, W. and Marais, G. v. R. and Matsuo, T.},
+  title   = {A general model for single-sludge wastewater treatment systems},
+  journal = {Water Research},
+  volume  = {21},
+  number  = {5},
+  pages   = {505--515},
+  year    = {1987},
+}
+
+@techreport{copp2002,
+  author      = {Copp, J. B.},
+  title       = {The {COST} Simulation Benchmark: Description and Simulator Manual},
+  institution = {Office for Official Publications of the European Communities},
+  address     = {Luxembourg},
+  year        = {2002},
+}
+
+@book{gernaey2014,
+  author    = {Gernaey, K. V. and Jeppsson, U. and Vanrolleghem, P. A. and Copp, J. B.},
+  title     = {Benchmarking of Control Strategies for Wastewater Treatment Plants},
+  publisher = {IWA Publishing},
+  series    = {Scientific and Technical Report No. 23},
+  address   = {London},
+  year      = {2014},
+}
+
+@techreport{alex2008,
+  author      = {Alex, J. and Benedetti, L. and Copp, J. and Gernaey, K. V. and Jeppsson, U. and Nopens, I. and Pons, M.-N. and Rieger, L. and Rosen, C. and Steyer, J.-P. and Vanrolleghem, P. and Winkler, S.},
+  title       = {Benchmark Simulation Model no. 1 ({BSM1})},
+  institution = {Lund University, Dept. of Industrial Electrical Engineering and Automation},
+  type        = {Technical Report},
+  year        = {2008},
+}
+
+@article{jeppsson2007,
+  author  = {Jeppsson, U. and Pons, M.-N. and Nopens, I. and Alex, J. and Copp, J. B. and Gernaey, K. V. and Rosen, C. and Steyer, J.-P. and Vanrolleghem, P. A.},
+  title   = {Benchmark simulation model no 2 -- general protocol and exploratory case studies},
+  journal = {Water Science and Technology},
+  volume  = {56},
+  number  = {8},
+  pages   = {67--78},
+  year    = {2007},
+}
+
+@article{takacs1991,
+  author  = {Tak\'{a}cs, I. and Patry, G. G. and Nolasco, D.},
+  title   = {A dynamic model of the clarification--thickening process},
+  journal = {Water Research},
+  volume  = {25},
+  number  = {10},
+  pages   = {1263--1271},
+  year    = {1991},
+}
+
+% =========================================================================
+% Model-as-data: declarative model formats, DSLs, and safe interpretation
+% =========================================================================
+
+@article{hucka2003,
+  author  = {Hucka, M. and Finney, A. and Sauro, H. M. and Bolouri, H. and Doyle, J. C. and Kitano, H. and others},
+  title   = {The systems biology markup language ({SBML}): a medium for representation and exchange of biochemical network models},
+  journal = {Bioinformatics},
+  volume  = {19},
+  number  = {4},
+  pages   = {524--531},
+  year    = {2003},
+}
+
+@article{hoops2006,
+  author  = {Hoops, S. and Sahle, S. and Gauges, R. and Lee, C. and Pahle, J. and Simus, N. and Singhal, M. and Xu, L. and Mendes, P. and Kummer, U.},
+  title   = {{COPASI}---a {COmplex} {PAthway} {SImulator}},
+  journal = {Bioinformatics},
+  volume  = {22},
+  number  = {24},
+  pages   = {3067--3074},
+  year    = {2006},
+}
+
+@article{somogyi2015,
+  author  = {Somogyi, E. T. and Bouteiller, J.-M. and Glazier, J. A. and K\"{o}nig, M. and Medley, J. K. and Swat, M. H. and Sauro, H. M.},
+  title   = {{libRoadRunner}: a high performance {SBML} simulation and analysis library},
+  journal = {Bioinformatics},
+  volume  = {31},
+  number  = {20},
+  pages   = {3315--3321},
+  year    = {2015},
+}
+
+@misc{cantera,
+  author       = {Goodwin, D. G. and Moffat, H. K. and Schoegl, I. and Speth, R. L. and Weber, B. W.},
+  title        = {{Cantera}: An Object-oriented Software Toolkit for Chemical Kinetics, Thermodynamics, and Transport Processes},
+  howpublished = {Version 3.0.0. Zenodo},
+  year         = {2023},
+}
+
+@article{mernik2005,
+  author  = {Mernik, M. and Heering, J. and Sloane, A. M.},
+  title   = {When and how to develop domain-specific languages},
+  journal = {ACM Computing Surveys},
+  volume  = {37},
+  number  = {4},
+  pages   = {316--344},
+  year    = {2005},
+}
+
+@inproceedings{richards2011eval,
+  author    = {Richards, G. and Hammer, C. and Burg, B. and Vitek, J.},
+  title     = {The Eval that Men Do: A Large-scale Study of the Use of Eval in {JavaScript} Applications},
+  booktitle = {ECOOP 2011 -- Object-Oriented Programming},
+  series    = {Lecture Notes in Computer Science},
+  volume    = {6813},
+  pages     = {52--78},
+  publisher = {Springer},
+  year      = {2011},
+}
+
+@misc{cwe94,
+  author       = {{MITRE}},
+  title        = {{CWE-94}: Improper Control of Generation of Code (`Code Injection')},
+  howpublished = {Common Weakness Enumeration. \url{https://cwe.mitre.org/data/definitions/94.html}},
+  year         = {2024},
+}
+
+% =========================================================================
+% Commercial wastewater process simulators (model-customization mechanisms)
+% =========================================================================
+
+@misc{sumoslang,
+  author       = {{Dynamita}},
+  title        = {The Book of {SumoSlang}},
+  howpublished = {\url{https://dynamita.com/Sumo21/The%20Book%20of%20SumoSlang.pdf}},
+  year         = {n.d.},
+  note         = {Sumo process-modelling software manual. Accessed 2026-07-02},
+}
+
+@misc{sumodoc,
+  author       = {{Dynamita}},
+  title        = {Sumo Documentation (Version 22.1)},
+  howpublished = {\url{https://dynamita.com/sumo22.1/Sumo22.1%20documentation.pdf}},
+  year         = {n.d.},
+  note         = {Accessed 2026-07-02},
+}
+
+@misc{gpsx,
+  author       = {{Hydromantis}},
+  title        = {{GPS-X} Technical Reference (Version 8.0)},
+  howpublished = {\url{https://www.hydromantis.com/help/GPS-X/docs/8.0/Technical/index.html}},
+  year         = {n.d.},
+  note         = {Accessed 2026-07-02},
+}
+
+@misc{gpsxug,
+  author       = {{Hydromantis}},
+  title        = {{GPS-X} User Guide (Version 8.5): Model Developer},
+  howpublished = {\url{https://www.hydromantis.com/help/GPS-X/docs/8.5/User-Guide/14_CHAPTER14.htm}},
+  year         = {n.d.},
+  note         = {Accessed 2026-07-02},
+}
+
+@misc{biowin,
+  author       = {{EnviroSim Associates}},
+  title        = {{BioWin} Advantage 6.1: Using {BioWin}'s Model Builder Functionality},
+  howpublished = {The BioWin Advantage newsletter},
+  year         = {2017},
+}
+
+@article{vanhooren2003,
+  author  = {Vanhooren, H. and Meirlaen, J. and Amerlinck, Y. and Claeys, F. and Vangheluwe, H. and Vanrolleghem, P. A.},
+  title   = {{WEST}: modelling biological wastewater treatment},
+  journal = {Journal of Hydroinformatics},
+  volume  = {5},
+  number  = {1},
+  pages   = {27--50},
+  year    = {2003},
+}
+
+@inproceedings{claeys2006tornado,
+  author    = {Claeys, F. and De Pauw, D. J. W. and Benedetti, L. and Nopens, I. and Vanrolleghem, P. A.},
+  title     = {Tornado: A versatile and efficient modelling \& virtual experimentation kernel for water quality systems},
+  booktitle = {Proceedings of the {iEMSs} 2006 (3rd Biennial Meeting of the International Environmental Modelling and Software Society)},
+  address   = {Burlington, VT, USA},
+  year      = {2006},
+}
+
+@misc{westuserguides,
+  author       = {{DHI}},
+  title        = {{WEST} User Guides},
+  howpublished = {\url{https://manuals.mikepoweredbydhi.help/latest/Cities/WEST_UserGuides.pdf}},
+  year         = {n.d.},
+  note         = {Accessed 2026-07-02},
+}
+
+@misc{westmodels,
+  author       = {{DHI}},
+  title        = {{WEST} Models Guide},
+  howpublished = {\url{https://manuals.mikepoweredbydhi.help/latest/Cities/WEST_Modelica_Library.pdf}},
+  year         = {2026},
+  note         = {Version 7 (WEST 2026-U1)},
+}
+
+@misc{simba,
+  author       = {{ifak}},
+  title        = {{SIMBA\#water}},
+  howpublished = {\url{https://www.ifak.eu/en/node/2956}},
+  year         = {n.d.},
+  note         = {ifak, Institut f\"{u}r Automation und Kommunikation, Magdeburg. Accessed 2026-07-02},
+}
+
+% =========================================================================
+% Calibration and identifiability (motivation for exact gradients)
+% =========================================================================
+
+@article{reichert1994,
+  author  = {Reichert, P.},
+  title   = {{AQUASIM} -- a tool for simulation and data analysis of aquatic systems},
+  journal = {Water Science and Technology},
+  volume  = {30},
+  number  = {2},
+  pages   = {21--30},
+  year    = {1994},
+}
+
+@article{vanrolleghem1995,
+  author  = {Vanrolleghem, P. A. and Van Daele, M. and Dochain, D.},
+  title   = {Practical identifiability of a biokinetic model of activated sludge respiration},
+  journal = {Water Research},
+  volume  = {29},
+  number  = {11},
+  pages   = {2561--2570},
+  year    = {1995},
+}
+
+@article{brun2001,
+  author  = {Brun, R. and Reichert, P. and K\"{u}nsch, H. R.},
+  title   = {Practical identifiability analysis of large environmental simulation models},
+  journal = {Water Resources Research},
+  volume  = {37},
+  number  = {4},
+  pages   = {1015--1030},
+  year    = {2001},
+}
+
+@article{yu2025,
+  author  = {Yu, H. and Wang, Y. and Li, T. and Gan, Q. and Qu, D. and Qu, F.},
+  title   = {Calibrating activated sludge models through hyperparameter optimization: a new framework for wastewater treatment plant simulation},
+  journal = {npj Clean Water},
+  volume  = {8},
+  number  = {1},
+  pages   = {80},
+  year    = {2025},
+}
+
+@article{qsdsan,
+  author  = {Li, Y. and Zhang, X. and Morgan, V. L. and Lohman, H. A. C. and Rowles, L. S. and Mittal, S. and Kogler, A. and Cusick, R. D. and Tarpeh, W. A. and Guest, J. S.},
+  title   = {{QSDsan}: an integrated platform for quantitative sustainable design of sanitation and resource recovery systems},
+  journal = {Environmental Science: Water Research \& Technology},
+  volume  = {8},
+  number  = {10},
+  pages   = {2289--2303},
+  year    = {2022},
+}
+
+@misc{peepypoo,
+  author       = {Wenk, F. and Fr\"{o}melt, A.},
+  title        = {{PeePyPoo}: a {Python} library for the simulation of wastewater treatment systems},
+  howpublished = {\url{https://gitlab.com/datinfo/PeePyPoo}},
+  year         = {n.d.},
+  note         = {Eawag. GitLab repository, accessed 2026-07-03},
+}
+
+
+% =========================================================================
+% Differentiable domain-model exemplars (genre precedent)
+% =========================================================================
+
+@article{kochkov2024neuralgcm,
+  author  = {Kochkov, D. and Yuval, J. and Langmore, I. and Norgaard, P. and Smith, J. and Mooers, G. and Klower, M. and Lottes, J. and Rasp, S. and Duben, P. and Hatfield, S. and Battaglia, P. and Sanchez-Gonzalez, A. and Willson, M. and Brenner, M. P. and Hoyer, S.},
+  title   = {Neural general circulation models for weather and climate},
+  journal = {Nature},
+  volume  = {632},
+  pages   = {1060--1066},
+  year    = {2024},
+}
+
+@article{kochkov2021jaxcfd,
+  author  = {Kochkov, D. and Smith, J. A. and Alieva, A. and Wang, Q. and Brenner, M. P. and Hoyer, S.},
+  title   = {Machine learning--accelerated computational fluid dynamics},
+  journal = {Proceedings of the National Academy of Sciences},
+  volume  = {118},
+  number  = {21},
+  pages   = {e2101784118},
+  year    = {2021},
+}
+
+@article{shen2023diffhydrology,
+  author  = {Shen, C. and Appling, A. P. and Gentine, P. and others},
+  title   = {Differentiable modelling to unify machine learning and physical models for geosciences},
+  journal = {Nature Reviews Earth \& Environment},
+  volume  = {4},
+  pages   = {552--567},
+  year    = {2023},
+}
+
+@article{loman2023,
+  author  = {Loman, T. E. and Ma, Y. and Ilin, V. and Gowda, S. and Korsbo, N. and Yewale, N. and Rackauckas, C. and Isaacson, S. A.},
+  title   = {Catalyst: fast and flexible modeling of reaction networks},
+  journal = {PLoS Computational Biology},
+  volume  = {19},
+  number  = {10},
+  pages   = {e1011530},
+  year    = {2023},
+}
+
+@article{dibella2026,
+  author  = {Di Bella, A. and Raissi, M. and Santoro, D. and Roccaro, P.},
+  title   = {Physics-informed neural networks in water and wastewater systems: a critical review},
+  journal = {Water Research},
+  volume  = {293},
+  pages   = {125449},
+  year    = {2026},
+}
+
+% =========================================================================
+% Automatic differentiation, adjoints, differentiable ODE solvers
+% =========================================================================
+
+@article{baydin2018,
+  author  = {Baydin, A. G. and Pearlmutter, B. A. and Radul, A. A. and Siskind, J. M.},
+  title   = {Automatic differentiation in machine learning: a survey},
+  journal = {Journal of Machine Learning Research},
+  volume  = {18},
+  number  = {153},
+  pages   = {1--43},
+  year    = {2018},
+}
+
+@book{griewank2008,
+  author    = {Griewank, A. and Walther, A.},
+  title     = {Evaluating Derivatives: Principles and Techniques of Algorithmic Differentiation},
+  edition   = {2nd},
+  publisher = {SIAM},
+  address   = {Philadelphia, PA},
+  year      = {2008},
+}
+
+@misc{jax2018github,
+  author       = {Bradbury, J. and Frostig, R. and Hawkins, P. and Johnson, M. J. and Katariya, Y. and Leary, C. and Maclaurin, D. and Necula, G. and Paszke, A. and VanderPlas, J. and Wanderman-Milne, S. and Zhang, Q.},
+  title        = {{JAX}: composable transformations of {P}ython+{N}um{P}y programs},
+  howpublished = {\url{http://github.com/jax-ml/jax}},
+  year         = {2018},
+}
+
+@inproceedings{chen2018neural,
+  author    = {Chen, R. T. Q. and Rubanova, Y. and Bettencourt, J. and Duvenaud, D. K.},
+  title     = {Neural Ordinary Differential Equations},
+  booktitle = {Advances in Neural Information Processing Systems 31 (NeurIPS 2018)},
+  pages     = {6571--6583},
+  year      = {2018},
+}
+
+@phdthesis{kidger2021on,
+  author = {Kidger, P.},
+  title  = {{O}n {N}eural {D}ifferential {E}quations},
+  school = {University of Oxford},
+  year   = {2021},
+}
+
+@article{hindmarsh2005,
+  author  = {Hindmarsh, A. C. and Brown, P. N. and Grant, K. E. and Lee, S. L. and Serban, R. and Shumaker, D. E. and Woodward, C. S.},
+  title   = {{SUNDIALS}: suite of nonlinear and differential/algebraic equation solvers},
+  journal = {ACM Transactions on Mathematical Software},
+  volume  = {31},
+  number  = {3},
+  pages   = {363--396},
+  year    = {2005},
+}
+
+@misc{sapienza2024,
+  author       = {Sapienza, F. and Bolibar, J. and Sch\"{a}fer, F. and Groenke, B. and Pal, A. and Boussange, V. and Heimbach, P. and Hooker, G. and P\'{e}rez, F. and Persson, P.-O. and Rackauckas, C.},
+  title        = {Differentiable Programming for Differential Equations: A Review},
+  howpublished = {arXiv:2406.09699},
+  year         = {2024},
+}
+
+@misc{rackauckas2020ude,
+  author       = {Rackauckas, C. and Ma, Y. and Martensen, J. and Warner, C. and Zubov, K. and Supekar, R. and Skinner, D. and Ramadhan, A. and Edelman, A.},
+  title        = {Universal Differential Equations for Scientific Machine Learning},
+  howpublished = {arXiv:2001.04385},
+  year         = {2020},
+}
+
+@article{goldberg1991,
+  author  = {Goldberg, D.},
+  title   = {What every computer scientist should know about floating-point arithmetic},
+  journal = {ACM Computing Surveys},
+  volume  = {23},
+  number  = {1},
+  pages   = {5--48},
+  year    = {1991},
+}
+
+@misc{Colvin_Pydantic_Validation_2026,
+  author       = {Colvin, S. and Jolibois, E. and Ramezani, H. and Garcia Badaracco, A. and Dorsey, T. and Montague, D. and Matveenko, S. and Trylesinski, M. and Runkle, S. and Hewitt, D. and Hall, A. and Plot, V.},
+  title        = {{Pydantic Validation}},
+  howpublished = {\url{https://github.com/pydantic/pydantic}},
+  year         = {2026},
+}
+
+@article{kim2021stiff,
+  author  = {Kim, S. and Ji, W. and Deng, S. and Ma, Y. and Rackauckas, C.},
+  title   = {Stiff neural ordinary differential equations},
+  journal = {Chaos: An Interdisciplinary Journal of Nonlinear Science},
+  volume  = {31},
+  number  = {9},
+  pages   = {093122},
+  year    = {2021}
+}
+
+@article{sandu2003,
+  author  = {Sandu, A. and Daescu, D. N. and Carmichael, G. R.},
+  title   = {Direct and adjoint sensitivity analysis of chemical kinetic systems with {KPP}: {Part} {I}, theory and software tools},
+  journal = {Atmospheric Environment},
+  volume  = {37},
+  number  = {36},
+  pages   = {5083--5096},
+  year    = {2003},
+}
+
+@article{zhang2014,
+  author  = {Zhang, H. and Sandu, A.},
+  title   = {{FATODE}: a library for forward, adjoint, and tangent linear integration of {ODEs}},
+  journal = {SIAM Journal on Scientific Computing},
+  volume  = {36},
+  number  = {5},
+  pages   = {C504--C523},
+  year    = {2014}
+}
+
+@article{brun2002,
+  author  = {Brun, R. and K\"{u}hni, M. and Siegrist, H. and Gujer, W. and Reichert, P.},
+  title   = {Practical identifiability of {ASM2d} parameters -- systematic selection and tuning of parameter subsets},
+  journal = {Water Research},
+  volume  = {36},
+  number  = {16},
+  pages   = {4113--4127},
+  year    = {2002}
+}
+
+@article{gutenkunst2007,
+  author  = {Gutenkunst, R. N. and Waterfall, J. J. and Casey, F. P. and Brown, K. S. and Myers, C. R. and Sethna, J. P.},
+  title   = {Universally sloppy parameter sensitivities in systems biology models},
+  journal = {PLoS Computational Biology},
+  volume  = {3},
+  number  = {10},
+  pages   = {e189},
+  year    = {2007}
+}
+
+@article{raue2009,
+  author  = {Raue, A. and Kreutz, C. and Maiwald, T. and Bachmann, J. and Schilling, M. and Klingm\"{u}ller, U. and Timmer, J.},
+  title   = {Structural and practical identifiability analysis of partially observed dynamical models by exploiting the profile likelihood},
+  journal = {Bioinformatics},
+  volume  = {25},
+  number  = {15},
+  pages   = {1923--1929},
+  year    = {2009}
+}
+
+@article{kelley1998,
+  author  = {Kelley, C. T. and Keyes, D. E.},
+  title   = {Convergence analysis of pseudo-transient continuation},
+  journal = {SIAM Journal on Numerical Analysis},
+  volume  = {35},
+  number  = {2},
+  pages   = {508--523},
+  year    = {1998},
+}
+
+@article{pattison2014,
+  author  = {Pattison, R. C. and Baldea, M.},
+  title   = {Equation-oriented flowsheet simulation and optimization using pseudo-transient models},
+  journal = {AIChE Journal},
+  volume  = {60},
+  number  = {12},
+  pages   = {4104--4123},
+  year    = {2014},
+}
+
+
+@book{allgower2003,
+  author    = {Allgower, E. L. and Georg, K.},
+  title     = {Introduction to Numerical Continuation Methods},
+  series    = {Classics in Applied Mathematics},
+  volume    = {45},
+  publisher = {SIAM},
+  address   = {Philadelphia},
+  year      = {2003},
+}
+
+@book{seydel2010,
+  author    = {Seydel, R.},
+  title     = {Practical Bifurcation and Stability Analysis},
+  edition   = {3rd},
+  series    = {Interdisciplinary Applied Mathematics},
+  volume    = {5},
+  publisher = {Springer},
+  address   = {New York},
+  year      = {2010},
+}
+
+@article{franceschini2008,
+  author  = {Franceschini, G. and Macchietto, S.},
+  title   = {Model-based design of experiments for parameter precision: State of the art},
+  journal = {Chemical Engineering Science},
+  volume  = {63},
+  number  = {19},
+  pages   = {4846--4872},
+  year    = {2008},
+}

@@ -56,8 +56,7 @@ write a PNG copy of each figure, which is not tracked.
 | `asm1_compact.yaml` | ASM1 excerpt shown as a listing in the paper |
 | `generated_values.tex` | every number quoted in the text, as LaTeX macros (generated) |
 | `validation_tables.tex` | per-species BSM1 validation tables (generated) |
-| `graphical_abstract.tex`, `graphical_abstract.pdf` | graphical abstract source and compiled PDF |
-| `ga_300.png`, `ga_grayscale.png`, `ga_legibility_13cm.png` | raster renders of the graphical abstract |
+| `graphical_abstract/` | the graphical abstract, a standalone document: its source (`graphical_abstract.tex`), the compiled PDF that `main.tex` includes, and raster renders (`ga_300.png`, `ga_grayscale.png`, `ga_legibility_13cm.png`) |
 
 ### `scripts/`
 
@@ -207,11 +206,11 @@ only if you have changed a figure or a cached result.
 cd paper && latexmk -pdf main.tex
 ```
 
-`main.tex` includes `graphical_abstract.pdf`, which is tracked. To rebuild it
-from its TikZ source:
+`main.tex` includes `graphical_abstract/graphical_abstract.pdf`, which is
+tracked. To rebuild it from its TikZ source:
 
 ```bash
-cd paper && latexmk -pdf graphical_abstract.tex
+cd paper/graphical_abstract && latexmk -pdf graphical_abstract.tex
 ```
 
 ## Data provenance
