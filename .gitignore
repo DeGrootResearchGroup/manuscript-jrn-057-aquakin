@@ -8,9 +8,9 @@
 .ruff_cache/
 *.swp
 
-# Generated figures (regenerate with paper_figures/make_all.py)
+# Generated figures (regenerate with paper_figures/make_all.py). The PDFs are
+# tracked so the paper compiles after a clone; the PNG copies are not.
 figures/*.png
-figures/*.pdf
 
 # Reference PDFs (copyrighted; local-only library)
 references/
