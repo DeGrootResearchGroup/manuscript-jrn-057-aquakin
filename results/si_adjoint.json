@@ -1,0 +1,55 @@
+{
+ "rtol": 1e-10,
+ "atol": 1e-12,
+ "batch": [
+  {
+   "dtmax": 0.0001,
+   "rel": 1.9516174950892624e-12,
+   "finite": true
+  },
+  {
+   "dtmax": 0.001,
+   "rel": 1.7480189796009054e-11,
+   "finite": true
+  },
+  {
+   "dtmax": 0.01,
+   "rel": 9.819160622177393e-10,
+   "finite": true
+  },
+  {
+   "dtmax": null,
+   "rel": 9.819160622177393e-10,
+   "finite": true
+  }
+ ],
+ "digester": [
+  {
+   "dtmax": 0.01,
+   "rel": 2.7972484311913477e-07,
+   "finite": true
+  },
+  {
+   "dtmax": 0.1,
+   "rel": 2.719596809419193e-07,
+   "finite": true
+  },
+  {
+   "dtmax": 1.0,
+   "rel": 5.7656350050030295e-08,
+   "finite": true
+  },
+  {
+   "dtmax": null,
+   "rel": 5.7656351434895884e-08,
+   "finite": true
+  }
+ ],
+ "dig_rtol": 1e-08,
+ "_aquakin": {
+  "version": "0.1.0",
+  "commit": "e198ec1412879be8e6ac731c9cb1284f5eabb404",
+  "dirty": false,
+  "path": "/Users/ctdegroot/aquakin-v0.1.1"
+ }
+}

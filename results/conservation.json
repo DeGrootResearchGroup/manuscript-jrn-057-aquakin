@@ -1,0 +1,77 @@
+{
+ "tol": 0.01,
+ "n_reactions": 8,
+ "violations": [
+  [
+   "anoxic_growth_heterotrophs",
+   "COD",
+   0.2947351156306379
+  ],
+  [
+   "anoxic_growth_heterotrophs",
+   "N",
+   -0.17221584385763486
+  ]
+ ],
+ "reactions": [
+  "aerobic_growth_heterotrophs",
+  "anoxic_growth_heterotrophs",
+  "aerobic_growth_autotrophs",
+  "decay_heterotrophs",
+  "decay_autotrophs",
+  "ammonification",
+  "hydrolysis_organics",
+  "hydrolysis_organic_n"
+ ],
+ "quantities": [
+  "COD",
+  "N"
+ ],
+ "residuals": [
+  [
+   5.551115123125783e-17,
+   0.0
+  ],
+  [
+   0.2947351156306379,
+   -0.17221584385763486
+  ],
+  [
+   -0.005952380952380064,
+   0.0
+  ],
+  [
+   4.163336342344337e-17,
+   0.0
+  ],
+  [
+   4.163336342344337e-17,
+   0.0
+  ],
+  [
+   0.0,
+   0.0
+  ],
+  [
+   0.0,
+   0.0
+  ],
+  [
+   0.0,
+   0.0
+  ]
+ ],
+ "unbalanced_reactions": [
+  "anoxic_growth_heterotrophs"
+ ],
+ "Y_H": 0.67,
+ "n2_n_per_biomass": 0.17221584385763486,
+ "n2_cod_per_n": 1.7114285714285713,
+ "n2_cod_per_biomass": 0.2947351156306379,
+ "_aquakin": {
+  "version": "0.1.0",
+  "commit": "84aeb21ed58f90ffd9a0efdf1e8f6e33a9ae9f9b",
+  "dirty": false,
+  "path": "/Users/ctdegroot/aquakin-v0.1.0"
+ }
+}
