@@ -8,7 +8,7 @@
 .ruff_cache/
 *.swp
 
-# Generated figures (regenerate with paper_figures/make_all.py). The PDFs are
+# Generated figures (regenerate with scripts/make_all.py). The PDFs are
 # tracked so the paper compiles after a clone; the PNG copies are not.
 figures/*.png
 
@@ -47,5 +47,5 @@ __pycache__/
 
 # Throwaway probes and diagnostics (keeping the script that produced
 # data/bsm1_dry_influent.csv from the official BSM1 influent file)
-paper_figures/_*.py
-!paper_figures/_extract_dry_influent.py
+scripts/_*.py
+!scripts/_extract_dry_influent.py
