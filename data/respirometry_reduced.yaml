@@ -1,0 +1,31 @@
+# Reduced respirometry model: ASM1 heterotrophic aerobic core with
+# death-regeneration decay, fitted to OUR respirograms (scripts/fig_respirometry.py).
+model: {name: asm1_resp, version: "1.0", description: "Reduced ASM1 heterotrophic model with death-regeneration decay, for aerobic OUR respirograms.", references: []}
+species:
+  - {name: SS, units: "g_COD/m3", default_concentration: 80.0}
+  - {name: SH, units: "g_COD/m3", default_concentration: 200.0}
+  - {name: XS, units: "g_COD/m3", default_concentration: 0.0}
+  - {name: XH, units: "g_COD/m3", default_concentration: 18.0}
+  - {name: XP, units: "g_COD/m3", default_concentration: 0.0}
+  - {name: SO, units: "g_O2/m3",  default_concentration: 500.0}
+conditions: [{name: T, default: 293.15}]
+parameters:
+  muH:  {value: 2.30, bounds: [0.3, 10.0], transform: positive_log}
+  KS:   {value: 20.0, bounds: [1.0, 200.0], transform: positive_log}
+  KOH:  {value: 0.2,  bounds: [0.01, 2.0], transform: positive_log}
+  Y_H:  {value: 0.66, bounds: [0.4, 0.85], transform: logit}
+  bH:   {value: 0.40, bounds: [0.02, 3.0], transform: positive_log}
+  khS:  {value: 1.0,  bounds: [0.05, 10.0], transform: positive_log}
+  kh:   {value: 3.0,  bounds: [0.1, 20.0], transform: positive_log}
+  KX:   {value: 0.03, bounds: [0.001, 1.0], transform: positive_log}
+  f_P:  {value: 0.20, bounds: [0.05, 0.4], transform: logit}
+expressions:
+  rho_growth: "muH * [SS] / (KS + [SS]) * [SO] / (KOH + [SO]) * [XH]"
+  rho_hydS:   "khS * [SH]"
+  rho_hydX:   "kh * ([XS] / [XH]) / (KX + [XS] / [XH]) * [XH]"
+  rho_decay:  "bH * [XH]"
+reactions:
+  - {name: growth, rate: "rho_growth", stoichiometry: {SS: "-1 / Y_H", XH: 1, SO: "-(1 - Y_H) / Y_H"}}
+  - {name: hydrolysis_S, rate: "rho_hydS", stoichiometry: {SH: -1, SS: 1}}
+  - {name: hydrolysis_X, rate: "rho_hydX", stoichiometry: {XS: -1, SS: 1}}
+  - {name: decay, rate: "rho_decay", stoichiometry: {XH: -1, XS: "1 - f_P", XP: "f_P"}}

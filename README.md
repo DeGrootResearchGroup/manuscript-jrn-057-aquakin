@@ -44,7 +44,10 @@ write a PNG copy of each figure, which is not tracked.
 | `bsm1_asm1_parameters.json` | the fixed BSM1 ASM1 kinetic and stoichiometric parameter set (15 °C) |
 | `bsm1_dry_influent.csv` | BSM1 dry-weather influent, 15-minute samples, in aquakin's ASM1 species order |
 | `decay.yaml` | two-species first-order decay network used in the verification figure |
+| `stiff_chain.yaml` | stiff linear chain A → B → C used in the verification figure |
 | `gupta2018_fig4-1_OUR_digitized.csv` | digitized oxygen-uptake-rate respirograms (raw wastewater, primary-clarifier effluent, rotating-belt-filter effluent) |
+| `respirometry_reduced.yaml` | reduced ASM1 heterotroph model (death-regeneration) fitted to the respirograms |
+| `respirometry_storage.yaml` | modified ASM3 simultaneous storage and growth model fitted to the respirograms |
 
 ### `paper/`
 
@@ -244,7 +247,7 @@ The repository uses two licences, plus third-party data that neither covers.
 
 **Code: MIT** ([`LICENSE`](LICENSE)). This covers:
 - everything in `scripts/`;
-- `data/decay.yaml`;
+- the model files in `data/` (`decay.yaml`, `stiff_chain.yaml`, `respirometry_reduced.yaml`, `respirometry_storage.yaml`);
 - `paper/asm1_compact.yaml`, an excerpt of aquakin's ASM1 model file (aquakin is also MIT-licensed);
 - `paper/arxiv.sty`.
 

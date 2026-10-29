@@ -29,7 +29,6 @@ Cache key: "respirometry".
 from __future__ import annotations
 import os
 import re
-import tempfile
 import numpy as np
 import common
 
@@ -54,73 +53,9 @@ DR_YH, DR_BH, DR_FP, DR_KS = 0.66, 0.40, 0.20, 20.0
 ST_YSTO, ST_YH, ST_KS, ST_KSTO = 0.85, 0.66, 2.0, 1.0
 ST_FXI, ST_BH, ST_BSTO = 0.20, 0.40, 0.20
 
-YAML_DR = """model: {name: asm1_resp, version: "1.0", description: x, references: []}
-species:
-  - {name: SS, units: "g_COD/m3", default_concentration: 80.0}
-  - {name: SH, units: "g_COD/m3", default_concentration: 200.0}
-  - {name: XS, units: "g_COD/m3", default_concentration: 0.0}
-  - {name: XH, units: "g_COD/m3", default_concentration: 18.0}
-  - {name: XP, units: "g_COD/m3", default_concentration: 0.0}
-  - {name: SO, units: "g_O2/m3",  default_concentration: 500.0}
-conditions: [{name: T, default: 293.15}]
-parameters:
-  muH:  {value: 2.30, bounds: [0.3, 10.0], transform: positive_log}
-  KS:   {value: 20.0, bounds: [1.0, 200.0], transform: positive_log}
-  KOH:  {value: 0.2,  bounds: [0.01, 2.0], transform: positive_log}
-  Y_H:  {value: 0.66, bounds: [0.4, 0.85], transform: logit}
-  bH:   {value: 0.40, bounds: [0.02, 3.0], transform: positive_log}
-  khS:  {value: 1.0,  bounds: [0.05, 10.0], transform: positive_log}
-  kh:   {value: 3.0,  bounds: [0.1, 20.0], transform: positive_log}
-  KX:   {value: 0.03, bounds: [0.001, 1.0], transform: positive_log}
-  f_P:  {value: 0.20, bounds: [0.05, 0.4], transform: logit}
-expressions:
-  rho_growth: "muH * [SS] / (KS + [SS]) * [SO] / (KOH + [SO]) * [XH]"
-  rho_hydS:   "khS * [SH]"
-  rho_hydX:   "kh * ([XS] / [XH]) / (KX + [XS] / [XH]) * [XH]"
-  rho_decay:  "bH * [XH]"
-reactions:
-  - {name: growth, rate: "rho_growth", stoichiometry: {SS: "-1 / Y_H", XH: 1, SO: "-(1 - Y_H) / Y_H"}}
-  - {name: hydrolysis_S, rate: "rho_hydS", stoichiometry: {SH: -1, SS: 1}}
-  - {name: hydrolysis_X, rate: "rho_hydX", stoichiometry: {XS: -1, SS: 1}}
-  - {name: decay, rate: "rho_decay", stoichiometry: {XH: -1, XS: "1 - f_P", XP: "f_P"}}
-"""
-
-YAML_ST = """model: {name: asm3_sto, version: "1.0", description: x, references: []}
-species:
-  - {name: SS,   units: "g_COD/m3", default_concentration: 100.0}
-  - {name: XSTO, units: "g_COD/m3", default_concentration: 0.0}
-  - {name: XH,   units: "g_COD/m3", default_concentration: 18.0}
-  - {name: XP,   units: "g_COD/m3", default_concentration: 0.0}
-  - {name: SO,   units: "g_O2/m3",  default_concentration: 500.0}
-conditions: [{name: T, default: 293.15}]
-parameters:
-  muH:   {value: 2.0, bounds: [0.2, 8.0],  transform: positive_log}
-  kSTO:  {value: 5.0, bounds: [0.5, 30.0], transform: positive_log}
-  muSTO: {value: 2.0, bounds: [0.2, 8.0],  transform: positive_log}
-  KS:    {value: 2.0, bounds: [0.1, 50.0], transform: positive_log}
-  KSTO:  {value: 1.0, bounds: [0.05, 10.0], transform: positive_log}
-  YSTO:  {value: 0.85, bounds: [0.5, 0.95], transform: logit}
-  Y_H:   {value: 0.66, bounds: [0.4, 0.85], transform: logit}
-  bH:    {value: 0.40, bounds: [0.02, 3.0], transform: positive_log}
-  bSTO:  {value: 0.20, bounds: [0.02, 3.0], transform: positive_log}
-  KOH:   {value: 0.2, bounds: [0.01, 2.0], transform: positive_log}
-  f_XI:  {value: 0.20, bounds: [0.05, 0.4], transform: logit}
-expressions:
-  mon_ss:  "[SS] / (KS + [SS])"
-  mon_o:   "[SO] / (KOH + [SO])"
-  mon_sto: "([XSTO] / [XH]) / (KSTO + [XSTO] / [XH])"
-  rho_sto:   "kSTO  * mon_ss * mon_o * [XH]"
-  rho_growS: "muH   * mon_ss * mon_o * [XH]"
-  rho_growT: "muSTO * mon_sto * mon_o * [XH]"
-  rho_endoH: "bH   * mon_o * [XH]"
-  rho_endoT: "bSTO * mon_o * [XSTO]"
-reactions:
-  - {name: storage, rate: "rho_sto", stoichiometry: {SS: -1, XSTO: "YSTO", SO: "-(1 - YSTO)"}}
-  - {name: growth_SS, rate: "rho_growS", stoichiometry: {SS: "-1 / Y_H", XH: 1, SO: "-(1 - Y_H) / Y_H"}}
-  - {name: growth_STO, rate: "rho_growT", stoichiometry: {XSTO: "-1 / Y_H", XH: 1, SO: "-(1 - Y_H) / Y_H"}}
-  - {name: endo_XH, rate: "rho_endoH", stoichiometry: {XH: -1, XP: "f_XI", SO: "-(1 - f_XI)"}}
-  - {name: endo_XSTO, rate: "rho_endoT", stoichiometry: {XSTO: -1, SO: -1}}
-"""
+# The two model structures, declared as aquakin YAML in data/.
+DR_MODEL = os.path.join(common.DATA_DIR, "respirometry_reduced.yaml")
+ST_MODEL = os.path.join(common.DATA_DIR, "respirometry_storage.yaml")
 
 
 def load_curves():
@@ -154,13 +89,8 @@ def _compute():
     import aquakin
     from aquakin import FreeICConfig, LaplaceConfig, OptimizerConfig
 
-    def _load(yaml):
-        d = tempfile.mkdtemp()
-        p = os.path.join(d, "net.yaml"); open(p, "w").write(yaml)
-        return aquakin.load_model_from_file(p)
-
     # ---- reduced model -----------------------------------------------------
-    net_dr = _load(YAML_DR); si, pi = net_dr.species_index, net_dr.param_index
+    net_dr = aquakin.load_model_from_file(DR_MODEL); si, pi = net_dr.species_index, net_dr.param_index
     SO = si["SO"]; cond = net_dr.default_conditions(1)
     rx_dr = aquakin.BatchReactor(net_dr, cond, integrator=aquakin.IntegratorConfig(max_steps=1_000_000))
 
@@ -184,7 +114,7 @@ def _compute():
         return jax.vmap(lambda c: our_dr(c, p))(sol.C)
 
     # ---- storage model -----------------------------------------------------
-    net_st = _load(YAML_ST); sj, pj = net_st.species_index, net_st.param_index
+    net_st = aquakin.load_model_from_file(ST_MODEL); sj, pj = net_st.species_index, net_st.param_index
     SOj = sj["SO"]; condj = net_st.default_conditions(1)
     rx_st = aquakin.BatchReactor(net_st, condj, integrator=aquakin.IntegratorConfig(max_steps=2_000_000))
 
@@ -413,7 +343,7 @@ def main():
     pw = d["profile_ww"]
     mdr, pdr = with_fit(mg, np.asarray(d["prof_dr"]), d["per_dr"][pw]["muH"], d["prof_fit_dr"])
     mst, pst = with_fit(mg, np.asarray(d["prof_st"]), d["per_st"][pw]["muH"], d["prof_fit_st"])
-    st_lo = float(re.search(r"muH:\s*\{[^}]*bounds:\s*\[([0-9.]+)", YAML_ST).group(1))
+    st_lo = float(re.search(r"muH:\s*\{[^}]*bounds:\s*\[([0-9.]+)", open(ST_MODEL).read()).group(1))
     lo_dr, hi_dr = d["ident_ci_dr"]
     lo_st, hi_st = d["ident_ci_st"]
     lo_st = st_lo if lo_st is None else lo_st          # open at the grid edge = the bound

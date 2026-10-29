@@ -1,0 +1,38 @@
+# Storage respirometry model: modified ASM3 with simultaneous storage and
+# growth (after Karahan-Gul et al. 2003), fitted to OUR respirograms
+# (scripts/fig_respirometry.py).
+model: {name: asm3_sto, version: "1.0", description: "Modified ASM3 with simultaneous storage and growth, for aerobic OUR respirograms.", references: []}
+species:
+  - {name: SS,   units: "g_COD/m3", default_concentration: 100.0}
+  - {name: XSTO, units: "g_COD/m3", default_concentration: 0.0}
+  - {name: XH,   units: "g_COD/m3", default_concentration: 18.0}
+  - {name: XP,   units: "g_COD/m3", default_concentration: 0.0}
+  - {name: SO,   units: "g_O2/m3",  default_concentration: 500.0}
+conditions: [{name: T, default: 293.15}]
+parameters:
+  muH:   {value: 2.0, bounds: [0.2, 8.0],  transform: positive_log}
+  kSTO:  {value: 5.0, bounds: [0.5, 30.0], transform: positive_log}
+  muSTO: {value: 2.0, bounds: [0.2, 8.0],  transform: positive_log}
+  KS:    {value: 2.0, bounds: [0.1, 50.0], transform: positive_log}
+  KSTO:  {value: 1.0, bounds: [0.05, 10.0], transform: positive_log}
+  YSTO:  {value: 0.85, bounds: [0.5, 0.95], transform: logit}
+  Y_H:   {value: 0.66, bounds: [0.4, 0.85], transform: logit}
+  bH:    {value: 0.40, bounds: [0.02, 3.0], transform: positive_log}
+  bSTO:  {value: 0.20, bounds: [0.02, 3.0], transform: positive_log}
+  KOH:   {value: 0.2, bounds: [0.01, 2.0], transform: positive_log}
+  f_XI:  {value: 0.20, bounds: [0.05, 0.4], transform: logit}
+expressions:
+  mon_ss:  "[SS] / (KS + [SS])"
+  mon_o:   "[SO] / (KOH + [SO])"
+  mon_sto: "([XSTO] / [XH]) / (KSTO + [XSTO] / [XH])"
+  rho_sto:   "kSTO  * mon_ss * mon_o * [XH]"
+  rho_growS: "muH   * mon_ss * mon_o * [XH]"
+  rho_growT: "muSTO * mon_sto * mon_o * [XH]"
+  rho_endoH: "bH   * mon_o * [XH]"
+  rho_endoT: "bSTO * mon_o * [XSTO]"
+reactions:
+  - {name: storage, rate: "rho_sto", stoichiometry: {SS: -1, XSTO: "YSTO", SO: "-(1 - YSTO)"}}
+  - {name: growth_SS, rate: "rho_growS", stoichiometry: {SS: "-1 / Y_H", XH: 1, SO: "-(1 - Y_H) / Y_H"}}
+  - {name: growth_STO, rate: "rho_growT", stoichiometry: {XSTO: "-1 / Y_H", XH: 1, SO: "-(1 - Y_H) / Y_H"}}
+  - {name: endo_XH, rate: "rho_endoH", stoichiometry: {XH: -1, XP: "f_XI", SO: "-(1 - f_XI)"}}
+  - {name: endo_XSTO, rate: "rho_endoT", stoichiometry: {XSTO: -1, SO: -1}}

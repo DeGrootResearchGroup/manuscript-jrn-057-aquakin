@@ -89,23 +89,7 @@ def _compute():
     #     hence a closed-form parameter sensitivity, so the reverse-mode gradient
     #     of the stiff solve can be verified against an analytic reference -- on a
     #     stiff problem, unlike the non-stiff decay above.
-    import tempfile
-    stiff_yaml = (
-        "model: {name: stiff_chain, version: \"1.0\", description: x, references: []}\n"
-        "species:\n  - {name: A, default_concentration: 1.0}\n"
-        "  - {name: B, default_concentration: 0.0}\n"
-        "  - {name: C, default_concentration: 0.0}\n"
-        "conditions:\n  - {name: T, default: 293.15}\n"
-        "reactions:\n"
-        "  - {name: r1, rate: \"k1 * [A]\", parameters: {k1: {value: 1.0}},"
-        " stoichiometry: {A: -1, B: 1}}\n"
-        "  - {name: r2, rate: \"k2 * [B]\", parameters: {k2: {value: 1000.0}},"
-        " stoichiometry: {B: -1, C: 1}}\n"
-    )
-    with tempfile.TemporaryDirectory() as _d:
-        _p = os.path.join(_d, "stiff_chain.yaml")
-        open(_p, "w").write(stiff_yaml)
-        snet = aquakin.load_model_from_file(_p)
+    snet = aquakin.load_model_from_file(os.path.join(common.DATA_DIR, "stiff_chain.yaml"))
     sC0 = snet.default_concentrations(); siB = snet.species_index["B"]
     sk1, sk2 = snet.param_index["r1.k1"], snet.param_index["r2.k2"]
     sp0 = snet.default_parameters(); sT = 3.0
