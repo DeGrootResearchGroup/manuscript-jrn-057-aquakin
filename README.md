@@ -101,15 +101,15 @@ pip install "jax>=0.10" "jaxlib>=0.10" "diffrax>=0.7" optimistix pydantic pyyaml
 
 ### The pinned aquakin release
 
-The paper describes the aquakin **0.1.1** release, and every computed result
+The paper describes the aquakin **0.2.0** release, and every computed result
 must come from that exact commit. The pin is set in `scripts/common.py`:
 
 ```python
-AQUAKIN_PINNED_TAG = "v0.1.1"
+AQUAKIN_PINNED_TAG = "v0.2.0"
 AQUAKIN_PINNED_COMMIT = "e198ec1"
 ```
 
-Until the `v0.1.1` tag is published, the release is identified by commit
+Until the `v0.2.0` tag is published, the release is identified by commit
 `e198ec1` on aquakin's `main` branch. When the tag is cut, check out the tag
 instead of the commit; this README and `common.py` will be updated then.
 
@@ -121,13 +121,13 @@ git clone https://github.com/DeGrootResearchGroup/aquakin.git ../aquakin
 ```
 
 ```bash
-git -C ../aquakin worktree add --detach ../aquakin-v0.1.1 e198ec1
+git -C ../aquakin worktree add --detach ../aquakin-v0.2.0 e198ec1
 ```
 
 Then put that checkout first on `PYTHONPATH` whenever you run the scripts:
 
 ```bash
-PYTHONPATH=../aquakin-v0.1.1 python3 scripts/make_all.py
+PYTHONPATH=../aquakin-v0.2.0 python3 scripts/make_all.py
 ```
 
 Before computing anything, `common.load_or_compute` checks the imported
@@ -139,7 +139,7 @@ it was computed with, under the `_aquakin` key.
 
 Some of the caches currently in `results/` were computed against earlier aquakin
 commits; their `_aquakin.commit` field shows which. All of them will be
-recomputed against the tagged `v0.1.1` release, and this note removed, before
+recomputed against the tagged `v0.2.0` release, and this note removed, before
 the paper is finalized.
 
 ## Reproducing the paper
@@ -149,7 +149,7 @@ All commands below run from the repository root.
 ### Figures, numbers and tables from the cached results
 
 ```bash
-PYTHONPATH=../aquakin-v0.1.1 python3 scripts/make_all.py
+PYTHONPATH=../aquakin-v0.2.0 python3 scripts/make_all.py
 ```
 
 `make_all.py` runs every figure script, then the conservation audit, then the
@@ -161,7 +161,7 @@ figures in `figures/` (PDF and PNG) and regenerates `paper/generated_values.tex`
 To run one figure on its own:
 
 ```bash
-PYTHONPATH=../aquakin-v0.1.1 python3 scripts/fig_bsm1_steady.py
+PYTHONPATH=../aquakin-v0.2.0 python3 scripts/fig_bsm1_steady.py
 ```
 
 ### Recomputing results
@@ -170,11 +170,11 @@ Set `RECOMPUTE` to `all`, or to a comma-separated list of cache keys from the
 table above:
 
 ```bash
-RECOMPUTE=all PYTHONPATH=../aquakin-v0.1.1 python3 scripts/make_all.py
+RECOMPUTE=all PYTHONPATH=../aquakin-v0.2.0 python3 scripts/make_all.py
 ```
 
 ```bash
-RECOMPUTE=bsm1_steady PYTHONPATH=../aquakin-v0.1.1 python3 scripts/fig_bsm1_steady.py
+RECOMPUTE=bsm1_steady PYTHONPATH=../aquakin-v0.2.0 python3 scripts/fig_bsm1_steady.py
 ```
 
 A full recompute takes much longer than the cached run. After recomputing a
@@ -192,7 +192,7 @@ Three caches contain wall-clock timings: `steady_solver`, `performance` and
 otherwise idle machine, so other work does not distort them:
 
 ```bash
-RECOMPUTE=performance PYTHONPATH=../aquakin-v0.1.1 python3 scripts/fig_performance.py
+RECOMPUTE=performance PYTHONPATH=../aquakin-v0.2.0 python3 scripts/fig_performance.py
 ```
 
 Your timings will differ from the paper's. `steady_unstable` is kept separate from
@@ -287,4 +287,4 @@ Please cite the paper:
 > for wastewater treatment process models.* (Citation details to be added on
 > publication.)
 
-To cite the software, cite the aquakin release described in the paper (0.1.1).
+To cite the software, cite the aquakin release described in the paper (0.2.0).

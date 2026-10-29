@@ -121,13 +121,13 @@ def _recompute_requested(name):
 
 
 # --- aquakin provenance ----------------------------------------------------
-# The paper describes the aquakin 0.1.1 release, so every cached result must be
+# The paper describes the aquakin 0.2.0 release, so every cached result must be
 # computed against that commit. Point PYTHONPATH at a checkout of it (e.g.
-# ``git worktree add --detach ../aquakin-v0.1.1 e198ec1``); a recompute on any other
+# ``git worktree add --detach ../aquakin-v0.2.0 e198ec1``); a recompute on any other
 # commit, or on a checkout with local edits, is refused unless
-# AQUAKIN_ALLOW_UNPINNED=1 is set. 0.1.1 is not tagged yet: e198ec1 is the merged
+# AQUAKIN_ALLOW_UNPINNED=1 is set. 0.2.0 is not tagged yet: e198ec1 is the merged
 # Laplace-covariance fix (#593); re-point the tag here once the release is cut.
-AQUAKIN_PINNED_TAG = "v0.1.1"
+AQUAKIN_PINNED_TAG = "v0.2.0"
 AQUAKIN_PINNED_COMMIT = "e198ec1"
 
 
