@@ -44,13 +44,13 @@ def smallpct(x):
 
 
 _NUMBER_WORDS = ["zero", "one", "two", "three", "four", "five", "six", "seven",
-                 "eight", "nine", "ten"]
+                 "eight", "nine"]
 
 
 def words(x):
-    """Spell out an integer count <=10 (house style); numerals above that."""
+    """Spell out an integer count below 10 (house style); numerals from 10 up."""
     n = int(x)
-    return _NUMBER_WORDS[n] if 0 <= n <= 10 else str(n)
+    return _NUMBER_WORDS[n] if 0 <= n < 10 else str(n)
 
 
 def _sym(name):
@@ -135,13 +135,13 @@ def main():
     cmd("DiffRecovered", f"{df['mu_rec']:.3f}")
     cmd("DiffRecoveredRelErr", f"${sci(df['rec_rel'])}$")
     cmd("DiffNobs", str(int(df["n_obs"])))
-    cmd("DiffNsteps", str(int(df["n_steps"])))
+    cmd("DiffNsteps", words(df["n_steps"]))
     cmd("DiffGradFinite", "finite" if df["grad_finite"] else "non-finite")
 
     # --- multi-parameter batch calibration ---
     cal = _load("calibration")
-    cmd("CalNfree", str(len(cal["free"])))
-    cmd("CalNbatch", str(len(cal["panels"])))
+    cmd("CalNfree", words(len(cal["free"])))
+    cmd("CalNbatch", words(len(cal["panels"])))
     cmd("CalNobs", str(int(cal["n_obs_total"])))
     # assay design (Methods): durations in hours, samples per assay, the aerobic
     # assay's dense early window, and the sensor noise on S_S, S_O and S_NO
@@ -259,7 +259,7 @@ def main():
     _res = {q: v for _, q, v in cs["violations"]}
     assert abs(-_res["N"] - cs["n2_n_per_biomass"]) < 1e-6, _res
     assert abs(_res["COD"] - cs["n2_cod_per_biomass"]) < 1e-6, _res
-    cmd("ConsNreactions", str(int(cs["n_reactions"])))
+    cmd("ConsNreactions", words(cs["n_reactions"]))
     cmd("ConsResidN", f"${_res['N']:.2f}$")
     cmd("ConsResidCOD", f"${_res['COD']:+.2f}$")
     cmd("ConsNtwoCODperN", f"{cs['n2_cod_per_n']:.2f}")
@@ -283,7 +283,7 @@ def main():
 
     # --- steady-state solver (PTC + fold) ---
     sv = _load("steady_solver")
-    cmd("SteadyPtcIters", str(int(sv["ptc_iters"])))
+    cmd("SteadyPtcIters", words(sv["ptc_iters"]))
     cmd("SteadyPtcResidual", f"${sci(sv['ptc_residual'])}$")
     cmd("SteadyPtcSpeedupLo", f"{sv['speedup_lo']:.0f}")
     cmd("SteadyPtcSpeedupHi", f"{sv['speedup_hi']:.0f}")
@@ -360,7 +360,7 @@ def main():
     # --- real-data respirometry: two-model comparison (Gupta 2018) ---
     rs = _load("respirometry")
     dr, st = rs["per_dr"], rs["per_st"]
-    cmd("RespNww", str(int(rs["n_ww"])))
+    cmd("RespNww", words(rs["n_ww"]))
     cmd("RespProfileWW", rs["profile_ww"])
     # reduced (ASM1 death-regeneration) model: recovers muH
     cmd("RespDrErrBest", f"{rs['dr_err_best']:.0f}")
@@ -435,7 +435,7 @@ def main():
     # above); the per-size count is a config constant, so it is read from the module
     cmd("PerfNruns", str(int(p["n_runs"])))
     import fig_performance as _perf
-    cmd("PerfScaleNruns", str(int(p.get("scale_n_runs", _perf.SCALE_NRUNS))))
+    cmd("PerfScaleNruns", words(p.get("scale_n_runs", _perf.SCALE_NRUNS)))
 
     with open(OUT, "w") as f:
         f.write("\n".join(L) + "\n")

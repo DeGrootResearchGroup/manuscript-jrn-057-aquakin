@@ -53,7 +53,7 @@ def main():
     L.append("")
 
     # --- dynamic effluent table ---
-    L.append(r"\begin{table}[htbp]\centering")
+    L.append(r"\begin{table}[H]\centering")
     L.append(r"\caption{Open-loop BSM1 dry-weather dynamic validation: the "
              r"aquakin effluent averaged over days 7--14 against the reference.}"
              r"\label{tab:dynamic}")

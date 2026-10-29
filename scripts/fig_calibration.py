@@ -40,6 +40,10 @@ def _setup():
     asm1 = aquakin.load_model("asm1")
     si, pi = asm1.species_index, asm1.param_index
     cond = asm1.default_conditions(1)
+    # dtmax caps the step of the forward solves that generate (and plot) the
+    # synthetic data, resolving the fast initial oxygen transient on a finer
+    # discretization than the fits use. The fits ignore it: calibrate's
+    # stable-adjoint path runs the cap-free discrete-adjoint ESDIRK solve.
     rx = aquakin.BatchReactor(asm1, cond,
                               integrator=aquakin.IntegratorConfig(dtmax=1e-3))
     p_true = np.asarray(asm1.default_parameters())
