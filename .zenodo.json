@@ -1,0 +1,38 @@
+{
+  "title": "Reproduction code and manuscript for \"A runtime-configurable, automatically differentiable engine for wastewater treatment process models\"",
+  "upload_type": "software",
+  "description": "<p>Manuscript source and reproduction code for the paper <em>A runtime-configurable, automatically differentiable engine for wastewater treatment process models</em> (C. T. DeGroot, Western University).</p><p>The paper presents aquakin, a kinetics engine in which a reaction model is declared as data (a YAML file), each rate law is compiled through JAX into a differentiable function, and unit operations compose into a plant that is one differentiable program. The paper validates the engine on ASM1, the open-loop BSM1 benchmark and an ADM1 digester, and uses its exact gradients for calibration, identifiability analysis and experimental design.</p><p>This archive contains the LaTeX manuscript, the scripts that compute every result and draw every figure, the cached results those scripts produce, and the input data. Every result was computed against aquakin v0.2.0; see the README for how to reproduce the paper.</p><p>Licensing: the code (scripts and model files) is MIT-licensed; the manuscript, figures and cached results are CC BY 4.0. The BSM1 reference data and the digitized respirometry data are third-party data redistributed for reproduction only; see the README for their sources and how to cite them.</p>",
+  "creators": [
+    {
+      "name": "DeGroot, Christopher T.",
+      "affiliation": "Western University"
+    }
+  ],
+  "license": "mit",
+  "access_right": "open",
+  "keywords": [
+    "differentiable simulation",
+    "automatic differentiation",
+    "reaction models",
+    "activated sludge",
+    "BSM1",
+    "scientific software",
+    "wastewater treatment",
+    "JAX"
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "10.5281/zenodo.21268513",
+      "relation": "requires",
+      "resource_type": "software",
+      "scheme": "doi"
+    },
+    {
+      "identifier": "https://github.com/DeGrootResearchGroup/aquakin",
+      "relation": "requires",
+      "resource_type": "software",
+      "scheme": "url"
+    }
+  ],
+  "notes": "Mixed licensing: MIT for code, CC BY 4.0 for the manuscript, figures and results, and third-party BSM1 and digitized respirometry data whose rights remain with their owners. See LICENSE, LICENSE-CC-BY-4.0 and the README."
+}
