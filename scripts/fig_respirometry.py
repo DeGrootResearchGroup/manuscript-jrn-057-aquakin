@@ -15,8 +15,8 @@ municipal wastewater, ATU-inhibited so heterotrophs only):
     2003): heterotrophs both grow directly on S_S and store it as X_STO, then grow
     on the stored polymer. Storage rounds the peak and its oxidation sustains the
     decaying tail, fitting the whole curve -- but the direct-growth muH is then
-    non-identifiable from OUR alone (storage absorbs it), which the exact Fisher
-    information exposes as a flat profile likelihood.
+    not recoverable from OUR alone (storage absorbs it): the fit drives it to its
+    lower bound, and the profile likelihood gives only an upper limit.
 
 This is a real-data instance of the identifiability structure shown on twin data
 in fig_identifiability: a richer structure that fits better can render a parameter
@@ -157,6 +157,7 @@ def _compute():
             loss="nll", sigma="estimate", use_priors=False,
             free_ic=FreeICConfig(pools, bounds=(F_LO * COD, F_HI * COD)),
             optimizer=OptimizerConfig(max_iter=300, starts=starts),
+            diff=aquakin.DifferentiationConfig(mode="reverse", method="stable"),
             laplace=LaplaceConfig(method="gauss_newton", include_ic=True) if laplace else False)
 
     def metrics(model, our):
@@ -240,7 +241,7 @@ def _compute():
     nll_dr_ref = min(nll_dr.min(), per_dr[PROFILE_WW]["nll"])
     nll_st_ref = min(nll_st.min(), per_st[PROFILE_WW]["nll"])
     prof_dr, prof_st = nll_dr - nll_dr_ref, nll_st - nll_st_ref
-    # the same profiles as SSE, for the old "within 10% of the minimum SSE" reading
+    # the same profiles as SSE, for a "within 10% of the minimum SSE" width
     # (inverting the concentrated nll = (N/2) log(SSE/N) + N/2)
     sse = lambda nll: n_obs * np.exp(2.0 * nll / n_obs - 1.0)
     sse_dr, sse_st = sse(nll_dr), sse(nll_st)
@@ -277,7 +278,8 @@ def _compute():
         "prof_fit_st": per_st[PROFILE_WW]["nll"] - nll_st_ref,
         "ident_w_dr": ident_width(mg_dr, pf_dr), "ident_w_st": ident_width(mg_st, pf_st),
         "ident_ci_dr": ident_ci(mg_dr, pf_dr), "ident_ci_st": ident_ci(mg_st, pf_st),
-        # the old reading, SSE within 10% of its minimum, on the grid only as before
+        # the width where SSE is within 10% of its minimum, on the grid only
+        # (recorded for reference; the paper reports the likelihood interval)
         "ident_w_dr_sse110": ident_width(MU_GRID, sse_dr / sse_dr.min() - 1.0, 0.10),
         "ident_w_st_sse110": ident_width(MU_GRID, sse_st / sse_st.min() - 1.0, 0.10),
         "dr_err_best": float(min(per_dr[n]["err_pct"] for n in WW)),

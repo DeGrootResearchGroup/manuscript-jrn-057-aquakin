@@ -1,4 +1,4 @@
-"""Standalone ADM1 digester verification for JRN-057.
+"""Standalone ADM1 digester verification.
 
 Runs the anaerobic digester (ADM1 in its BSM2 form) as a *single reacting unit*
 fed the published BSM2 digester feed, without the coupled BSM2 plant, and checks
@@ -16,7 +16,7 @@ two things the paper needs on the same footing as the BSM1 reproduction:
       strong ions), so the check tests the speciation physics, not the engine's
       own solver.
 
-The full coupled-plant BSM2 validation lives in the companion (JRN-056); this
+The full coupled-plant BSM2 validation is outside the scope of the paper; this
 file is deliberately the standalone-unit check only. Cached to
 ``results/digester_validation.json``; consumed by ``make_paper_values.py`` and
 ``make_validation_tables.py``.

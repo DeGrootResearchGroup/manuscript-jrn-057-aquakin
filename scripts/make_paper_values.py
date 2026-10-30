@@ -285,6 +285,7 @@ def main():
     sv = _load("steady_solver")
     cmd("SteadyPtcIters", words(sv["ptc_iters"]))
     cmd("SteadyPtcResidual", f"${sci(sv['ptc_residual'])}$")
+    cmd("SteadyPtcSpeedup", f"{sv['speedup']:.0f}")   # median forward / median PTC
     cmd("SteadyPtcSpeedupLo", f"{sv['speedup_lo']:.0f}")
     cmd("SteadyPtcSpeedupHi", f"{sv['speedup_hi']:.0f}")
     cmd("SteadyFwdSolveMs", f"{sv['t_fwd'] * 1e3:.1f}")
@@ -354,7 +355,8 @@ def main():
     cmd("SteadyUnsSacNearSt", f"{_st['S_ac'][_i4]:.1f}")
     cmd("SteadyUnsSacNearUns", f"{_un['S_ac'][_i4]:.1f}")
     cmd("SteadyUnsNudgePct", f"{100 * su['nudge_frac']:.0f}")
-    cmd("SteadyUnsSacWash", f"{su['nudge']['away']['S_ac']:.1f}")
+    cmd("SteadyUnsSacWash", f"{su['nudge']['away']['S_ac_root']:.1f}")
+    cmd("SteadyUnsWashResid", f"${sci(su['nudge']['away']['resid_root'])}$")
     assert su["nudge"]["away"]["X_ac"] < 1e-6 and su["nudge"]["toward"]["X_ac"] > 0.5
 
     # --- real-data respirometry: two-model comparison (Gupta 2018) ---
@@ -425,6 +427,8 @@ def main():
     cmd("PerfSolveS", f"{p['solve_s']:.1f}")
     # compile split (trace + lower in JAX, then XLA) and the first call, compile + solve
     cmd("PerfTraceS", f"{p['compile_lower_s']:.1f}")
+    cmd("PerfGradCompileS", f"{p['grad_compile_s']:.0f}")
+    cmd("PerfGradCompileRatio", words(round(p['grad_compile_s'] / p['compile_s'])))
     cmd("PerfFirstCallS", f"{p['first_call_s']:.1f}")
     cmd("PerfNstate", str(int(p["n_state"])))
     cmd("PerfNparams", str(int(p["n_params"])))

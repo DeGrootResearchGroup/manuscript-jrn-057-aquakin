@@ -1,5 +1,10 @@
 """Extract the official BSM1 dry-weather influent into a shipped CSV.
 
+The output, data/bsm1_dry_influent.csv, is already in this repository, so this
+script is needed only to regenerate it. Its input is dryinfluent.ascii from the
+IWA BSM1 MATLAB/Simulink distribution, which is not redistributed here; place
+that distribution in BSM1_R2019b/ at the repository root to run it.
+
 Raw dryinfluent.ascii columns (per convert.m):
   a1=time(d) a2=SS a3=XBH a4=XS a5=XI a6=SNH a7=SI a8=SND a9=XND a10=Q
 BSM1 influent state order: t SI SS XI XS XB_H XB_A XP SO SNO SNH SND XND SALK Q

@@ -1,4 +1,4 @@
-"""Regenerate every figure, value, and table for the JRN-057 paper.
+"""Regenerate every figure, value, and table for the paper.
 
     python3 scripts/make_all.py
 

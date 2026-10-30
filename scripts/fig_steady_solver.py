@@ -356,6 +356,14 @@ def _compute_unstable():
                                                    nplant._coerce_params(params)), yend)
         nudge[tag] = {"S_ac": float(dig(yend)[si["S_ac"]]), "X_ac": float(dig(yend)[si["X_ac"]]),
                       "resid": resid}
+    # The integration only approaches the washed-out state, so polish its endpoint
+    # with a root find at the same loading and check that the root is stable.
+    yw = np.asarray(nplant.steady_state(params=params, y0=jnp.asarray(yend), max_iter=400,
+                                        tol=PTC_TOL, scale_floor=common.RESID_FLOOR).state)
+    nudge["away"].update(
+        S_ac_root=float(dig(yw)[si["S_ac"]]), X_ac_root=float(dig(yw)[si["X_ac"]]),
+        resid_root=common.scaled_residual(f(jnp.asarray(yw), jnp.array([UNS_NUDGE_LAM])), yw),
+        n_unstable_eig_root=n_unstable(yw, UNS_NUDGE_LAM))
     for arm in arms.values():
         del arm["state"]
     return {"lams": list(UNS_LAMS), "arms": arms, "n_eig_branch": n_eig_branch,

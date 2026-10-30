@@ -236,7 +236,8 @@ def main():
     ax[0].set(xlabel="relative finite-difference step $h$",
               ylabel="FD gradient error (rel. to exact)",
               title="(a) finite-difference accuracy")
-    ax[0].legend(frameon=False, loc="upper right", bbox_to_anchor=(1.0, 0.8))
+    # the legend sits in the gap between the batch floor and the plant curve
+    ax[0].legend(frameon=False, loc="lower center", bbox_to_anchor=(0.62, 0.13))
     ax[0].invert_xaxis()
 
     k = np.asarray(d["k"]); tad = np.asarray(d["t_ad"]); tfd = np.asarray(d["t_fd"])

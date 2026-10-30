@@ -236,7 +236,7 @@ def main():
 
     common.save(fig, "fig_performance")
     print(f"  n_state={d['n_state']} n_params={d['n_params']}")
-    if "compile_lower_s" in d:   # caches from before the ahead-of-time compile split lack these
+    if "compile_lower_s" in d:   # the trace/XLA split of the compile time, when recorded
         print(f"  compile {d['compile_s']:.2f}s (trace+lower {d['compile_lower_s']:.2f}s, "
               f"XLA {d['compile_xla_s']:.2f}s)  first solve {d['first_solve_s']:.3f}s  "
               f"solve {d['solve_s']:.3f}s  grad {d['grad_s']:.3f}s (compile {d['grad_compile_s']:.2f}s)")

@@ -98,7 +98,7 @@ def main():
              r"\midrule\endhead")
     L.append(r"\bottomrule\endfoot")
     for i in order:
-        nm = "\\texttt{" + dg["names"][i].replace("_", "\\_") + "}"
+        nm = _sym(dg["names"][i])
         L.append(f"{nm} & {dg['ref'][i]:.4g} & {dg['model'][i]:.4g} & "
                  f"{dg['forward'][i]:.4g} & {dg['rel_pct'][i]:.2g} \\\\")
     L.append(r"\end{longtable}")

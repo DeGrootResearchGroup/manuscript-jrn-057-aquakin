@@ -132,7 +132,7 @@ def _compute():
     #     inconsistent condition: one plant configuration serves every check in
     #     this section, including the mass-balance check below (a time-varying
     #     load would also make the loss depend on exactly when it is read off,
-    #     which swamps the true parameter sensitivity and was earlier mistaken
+    #     which swamps the true parameter sensitivity and is easily mistaken
     #     for finite-difference solver noise).
     from aquakin.plant.influent import InfluentSeries
     asm1 = aquakin.load_model("asm1")
@@ -198,8 +198,8 @@ def _compute():
     # gradient's" claim in the text, on this check itself rather than by
     # analogy to the batch/plant sweep of Figure~\ref{fig:adfd}.
     ADFD_H_GRID = [3e-1, 1e-1, 3e-2, 1e-2, 3e-3, 1e-3, 3e-4, 1e-4, 3e-5, 1e-5, 3e-6, 1e-6]
-    # The pinned atol above pushed each curve's own floor to a much smaller
-    # step than 1e-3 (previously the default at the looser, auto-scaled atol).
+    # The pinned atol above puts each curve's own floor at a much smaller step
+    # than 1e-3, where it sits under the looser, auto-scaled default atol.
     # 1e-4 is the largest step in the grid where every parameter is still on
     # the descending (truncation-limited) side of its own curve or right at
     # its minimum, not yet past it into the noise-dominated rise.
@@ -248,7 +248,7 @@ def _compute():
     g_fwd = np.asarray(jax.jacfwd(loss_fwd)(theta0))
     plant_fwdrev_rel = float(np.linalg.norm(g_fwd - g_ad) / np.linalg.norm(g_ad))
     # how much tighter the no-finite-difference check is than the FD comparison
-    # above, both now the same gradient at the same operating point -- quoted
+    # above, both the same gradient at the same operating point -- quoted
     # in the text instead of a hand-typed "orders of magnitude" claim.
     adfd_fwdrev_ratio = adfd_max_rel / plant_fwdrev_rel
     # per-parameter, for Figure fig:plantfd: how far below each FD step-size

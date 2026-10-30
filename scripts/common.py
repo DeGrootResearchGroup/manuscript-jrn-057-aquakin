@@ -1,4 +1,4 @@
-"""Shared configuration, caching, and plotting helpers for the JRN-057 figures.
+"""Shared configuration, caching, and plotting helpers for the paper's figures.
 
 Everything paper-specific lives here so the individual ``fig_*.py`` scripts stay
 short. Expensive computations (steady-state solves, model evaluations) are run
@@ -23,10 +23,10 @@ import sys
 
 import numpy as np
 
-# --- Make aquakin importable in the sibling-repo dev layout -----------------
-# The pinned, reproducible path is ``pip install -e ../aquakin`` (see
-# requirements.txt). If that has not been done, fall back to importing the
-# sibling checkout directly so the figures still run from a fresh clone.
+# --- Make aquakin importable ----------------------------------------------
+# The reproducible setup puts a checkout of the pinned release first on
+# PYTHONPATH (see the README). If aquakin is not importable at all, fall back to
+# a sibling checkout at ../aquakin, next to this repository.
 try:
     import aquakin  # noqa: F401
 except ModuleNotFoundError:
@@ -56,10 +56,9 @@ def scaled_residual(F, y):
     return float(np.max(np.abs(F) / np.maximum(np.abs(y), RESID_FLOOR)))
 
 # --- Fast forward solves ---------------------------------------------------
-# Since aquakin 0.2.0 the plant's forward_fast path honours integrator.max_steps
-# (default 1e5); before, it always ran with forward_solve's own budget of 1e8. The
-# long fast runs here (300 d of BSM1, the digester horizon) need more than 1e5
-# steps, so every forward_fast=True solve passes this, the old budget.
+# The plant's forward_fast path honours integrator.max_steps, whose default is
+# 1e5. The long fast runs here (300 d of BSM1, the digester horizon) need more
+# steps than that, so every forward_fast=True solve passes a budget of 1e8.
 FAST_INTEGRATOR = aquakin.IntegratorConfig(max_steps=100_000_000)
 
 # --- Paths -----------------------------------------------------------------
@@ -129,8 +128,8 @@ def _recompute_requested(name):
 
 # --- aquakin provenance ----------------------------------------------------
 # The paper describes the aquakin 0.2.0 release, so every cached result must be
-# computed against that commit. Point PYTHONPATH at a checkout of it (e.g.
-# ``git worktree add --detach ../aquakin-v0.2.0 v0.2.0``); a recompute on any other
+# computed against that commit. Point PYTHONPATH at a checkout of it (the README
+# gives the commands); a recompute on any other
 # commit, or on a checkout with local edits, is refused unless
 # AQUAKIN_ALLOW_UNPINNED=1 is set. 5936950 is the commit the v0.2.0 tag points to.
 AQUAKIN_PINNED_TAG = "v0.2.0"
@@ -138,7 +137,10 @@ AQUAKIN_PINNED_COMMIT = "5936950"
 
 
 def aquakin_provenance():
-    """The imported aquakin's version, git commit, dirty flag and location."""
+    """The imported aquakin's version, git commit, dirty flag and location.
+
+    The location is recorded relative to this repository, so a cache does not
+    carry the local directory layout above it."""
     import subprocess
     src = os.path.dirname(os.path.dirname(os.path.abspath(aquakin.__file__)))
 
@@ -153,7 +155,7 @@ def aquakin_provenance():
     return {"version": getattr(aquakin, "__version__", None),
             "commit": _git("rev-parse", "HEAD"),
             "dirty": None if status is None else bool(status),
-            "path": src}
+            "path": os.path.relpath(src, ROOT)}
 
 
 def _check_pinned(prov):
