@@ -137,13 +137,17 @@
   "away": {
    "S_ac": 7.337854933595527,
    "X_ac": -1.813871288249479e-12,
-   "resid": 3.884694974593725e-05
+   "resid": 3.884694974593725e-05,
+   "S_ac_root": 7.33785493359439,
+   "X_ac_root": 0.0,
+   "resid_root": 4.855868935406021e-09,
+   "n_unstable_eig_root": 0
   }
  },
  "_aquakin": {
   "version": "0.2.0",
   "commit": "5936950cfe5f2a9c0d07ebd979d9d56dc48986fc",
   "dirty": false,
-  "path": "/Users/ctdegroot/aquakin-v0.2.0"
+  "path": "../aquakin-v0.2.0"
  }
 }
