@@ -282,4 +282,8 @@ Please cite the paper:
 > for wastewater treatment process models.* (Citation details to be added on
 > publication.)
 
+To cite this repository (the reproduction code, data, and manuscript), use its
+Zenodo archive: <https://doi.org/10.5281/zenodo.23813202>. This DOI always
+resolves to the latest archived version.
+
 To cite the software, cite the aquakin release described in the paper (0.2.0).
