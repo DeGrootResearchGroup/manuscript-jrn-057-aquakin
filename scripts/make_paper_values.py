@@ -171,7 +171,7 @@ def main():
     # per parameter (min, median, max), and the relative sampling error of a spread
     # estimated from n_mc realizations, 1/sqrt(2(n-1)).
     _cov = sorted(e / p for e, p in zip(cal["emp_cv_pct"], cal["pred_cv_pct"]) if p > 0)
-    cmd("CalCoverageRatio", f"{_cov[len(_cov) // 2]:.1f}")
+    cmd("CalCoverageRatio", f"{_cov[len(_cov) // 2]:.2f}")
     cmd("CalCoverageLo", f"{_cov[0]:.2f}")
     cmd("CalCoverageHi", f"{_cov[-1]:.2f}")
     cmd("CalSpreadSEPct", f"{100 / np.sqrt(2 * (_n - 1)):.0f}")
@@ -369,9 +369,11 @@ def main():
     cmd("RespDrErrWorst", f"{rs['dr_err_worst']:.0f}")
     cmd("RespDrRtwoLo", f"{rs['dr_r2_lo']:.2f}")
     cmd("RespDrRtwoHi", f"{rs['dr_r2_hi']:.2f}")
+    import fig_respirometry as _resp_src   # the source study's table values
     for n in ("RWW", "PCE", "RBFE"):
         cmd(f"RespMuFit{n}", f"{dr[n]['muH']:.2f}")
         cmd(f"RespMuRep{n}", f"{dr[n]['muH_rep']:.2f}")
+        cmd(f"RespMuRepSd{n}", f"{_resp_src.MU_SD[n]:.2f}")
     # storage (modified ASM3) model: fits whole curve
     cmd("RespStRtwo", f"{rs['st_r2_lo']:.2f}")   # lo==hi to 2 dp
     # OUR RMSE per model, range over the wastewaters, in mg O2 L^-1 h^-1 (the cached
@@ -416,7 +418,7 @@ def main():
     cmd("DigWorstName", _adm.get(dg["worst_name"],
                                  "\\texttt{" + dg["worst_name"].replace("_", "\\_") + "}"))
     cmd("DigMethanePct", pct(dg["methane_pct"], 2))
-    cmd("DigNresolvable", str(int(dg["n_resolvable"])))
+    cmd("DigNstates", str(int(dg["n_resolvable"])))
     cmd("DigPtcVsFwd", f"${sci(dg['ptc_vs_fwd'])}$")
     cmd("DigPH", f"{dg['pH_engine']:.2f}")
     cmd("DigPHAbsErr", f"{dg['pH_abs_err']:.3f}")

@@ -210,10 +210,12 @@ def main():
     #     10th-90th-percentile band over the timed runs; compile (measured ahead of
     #     time, no solve included) is a one-time event.
     heights = [d["compile_s"], d["solve_s"], d["grad_s"]]
-    lo = [0.0, d["solve_s"] - d["solve_p10"], d["grad_s"] - d["grad_p10"]]
-    hi = [0.0, d["solve_p90"] - d["solve_s"], d["grad_p90"] - d["grad_s"]]
-    ax[0].bar([0, 1, 2], heights, yerr=[lo, hi], capsize=3,
-              error_kw=dict(ecolor="0.3", lw=1.0), color=["C0", "C2", "C1"])
+    lo = [d["solve_s"] - d["solve_p10"], d["grad_s"] - d["grad_p10"]]
+    hi = [d["solve_p90"] - d["solve_s"], d["grad_p90"] - d["grad_s"]]
+    ax[0].bar([0, 1, 2], heights, color=["C0", "C2", "C1"])
+    # no error bar on the single compile measurement
+    ax[0].errorbar([1, 2], heights[1:], yerr=[lo, hi], fmt="none", capsize=3,
+                   ecolor="0.3", lw=1.0)
     ax[0].set_xticks([0, 1, 2])
     ax[0].set_xticklabels(["compile", "solve\n(amortized)", "gradient\n(reverse)"])
     ax[0].set(ylabel="wall time (s)", title="(a) BSM1 plant cost")

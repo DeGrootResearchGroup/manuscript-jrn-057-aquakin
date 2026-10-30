@@ -38,6 +38,8 @@ WW = {
     "PCE":  (3.46, 8.0, 235.0, 84.0),
     "RBFE": (2.48, 17.0, 222.0, 74.0),
 }
+# Run-to-run standard deviation of muH_thesis over the three runs (Gupta Table 4-2)
+MU_SD = {"RWW": 0.80, "PCE": 0.31, "RBFE": 0.67}
 PROFILE_WW = "RWW"                       # wastewater used for the muH profile panel
 # muH values profiled: log-spaced (the fit works in log muH, and panel (d) is on a
 # log axis), from the storage model's muH lower bound, with extra points just
@@ -92,7 +94,7 @@ def _compute():
     # ---- reduced model -----------------------------------------------------
     net_dr = aquakin.load_model_from_file(DR_MODEL); si, pi = net_dr.species_index, net_dr.param_index
     SO = si["SO"]; cond = net_dr.default_conditions(1)
-    rx_dr = aquakin.BatchReactor(net_dr, cond, integrator=aquakin.IntegratorConfig(max_steps=1_000_000))
+    rx_dr = aquakin.BatchReactor(net_dr, cond)
 
     def dr_params(muH, khS):
         p = jnp.asarray(net_dr.default_parameters())
@@ -116,7 +118,7 @@ def _compute():
     # ---- storage model -----------------------------------------------------
     net_st = aquakin.load_model_from_file(ST_MODEL); sj, pj = net_st.species_index, net_st.param_index
     SOj = sj["SO"]; condj = net_st.default_conditions(1)
-    rx_st = aquakin.BatchReactor(net_st, condj, integrator=aquakin.IntegratorConfig(max_steps=2_000_000))
+    rx_st = aquakin.BatchReactor(net_st, condj)
 
     def st_params(muH, kSTO, muSTO):
         p = jnp.asarray(net_st.default_parameters())

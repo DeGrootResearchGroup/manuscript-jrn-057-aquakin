@@ -126,7 +126,9 @@ def main():
           Line2D([], [], color="C0", marker="|", ls="none", ms=9, mew=1.2),
           Line2D([], [], color="C3", marker="|", ls="none", ms=9, mew=1.2)]
     l += ["dissolved oxygen (right axis)", "original samples", "designed samples"]
-    ax[0].legend(h, l, frameon=False, loc="center right", fontsize="small")
+    # centred in the gap between the original and designed substrate curves
+    ax[0].legend(h, l, frameon=False, loc="center right", bbox_to_anchor=(1.0, 0.58),
+                 fontsize="small")
 
     # (b) Cramer-Rao relative std by design, with the realized Monte Carlo spread
     x = np.arange(len(FREE)); w = 0.2

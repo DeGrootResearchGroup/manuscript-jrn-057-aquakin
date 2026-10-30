@@ -50,6 +50,16 @@ def _compute():
     rx = aquakin.BatchReactor(asm1, cond,
                               integrator=aquakin.IntegratorConfig(dtmax=1e-3))
     p_true = jnp.asarray(np.asarray(asm1.default_parameters()))
+    # The loss is formed exactly as calibrate's discrete-adjoint path forms it: the
+    # cap-free ESDIRK solve whose reverse pass is the hand-written adjoint, at the
+    # reactor's tolerances. The capped reactor only generates the synthetic data.
+    from aquakin.integrate.discrete_adjoint import esdirk_adjoint_solve
+    fields = rx.conditions.fields
+    rhs = lambda t, y, p: asm1.dCdt(y, p, fields, 0)
+
+    def solve_obs(b, p):
+        return esdirk_adjoint_solve(rhs, b["C0"], p, (0., b["T"]), b["t"],
+                                    rtol=rx.rtol, atol=rx.atol)[:, oidx]
 
     def ic(**ov):
         C = np.asarray(asm1.default_concentrations()).copy()
@@ -78,7 +88,7 @@ def _compute():
                 p = p.at[pi[n]].set(val)
             tot = 0.0
             for b in specs:
-                pred = rx.solve(b["C0"], (0., b["T"]), t_eval=b["t"], params=p).C[:, oidx]
+                pred = solve_obs(b, p)
                 tot = tot + 0.5 * jnp.sum(((pred - b["y"]) / jnp.asarray(SIG)) ** 2)
             return tot
         return loss
@@ -221,10 +231,11 @@ def main():
     # need a heavy weight to stay visible on the page.
     for fl, col in ((d["floor"], "C0"), (d["plant_floor"], "C1")):
         ax[0].axhline(fl, color=col, ls=(0, (1.2, 1.2)), lw=2.4, zorder=1)
-    # the batch floor label goes below its line (room made by lowering the y-limit),
-    # clear of the batch curve, which sits on the floor at small steps
-    ax[0].annotate(f"floor ${_pow10(d['floor'])}$", (h[0], d["floor"]),
-                   textcoords="offset points", xytext=(0, -4), va="top", color="C0")
+    # the batch floor label goes below its line at the small-step (right) end (room
+    # made by lowering the y-limit), where the batch curve has risen above the floor
+    ax[0].annotate(f"floor ${_pow10(d['floor'])}$", (h[-1], d["floor"]),
+                   textcoords="offset points", xytext=(-2, -4), va="top", ha="right",
+                   color="C0")
     ax[0].set_ylim(bottom=d["floor"] / 8)
     # the plant floor label goes at the small-step (right) end, below its line, where
     # the plant curve is far above it and the batch curve still well below
