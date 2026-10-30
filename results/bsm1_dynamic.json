@@ -6819,9 +6819,9 @@
   }
  },
  "_aquakin": {
-  "version": "0.1.0",
-  "commit": "84aeb21ed58f90ffd9a0efdf1e8f6e33a9ae9f9b",
+  "version": "0.2.0",
+  "commit": "5936950cfe5f2a9c0d07ebd979d9d56dc48986fc",
   "dirty": false,
-  "path": "/Users/ctdegroot/aquakin-v0.1.0"
+  "path": "/Users/ctdegroot/aquakin-v0.2.0"
  }
 }

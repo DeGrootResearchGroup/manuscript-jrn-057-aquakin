@@ -107,7 +107,7 @@ def _compute():
     # run as the Fig. 8 baseline, long enough that its scaled residual is below the
     # PTC tolerance (asserted), so both end states are converged on the same rho.
     fwd_state = plant.solve((0.0, FWD_HORIZON_D), t_eval=np.array([FWD_HORIZON_D]),
-                            params=params, y0=y0, forward_fast=True).final_state
+                            params=params, y0=y0, forward_fast=True, integrator=common.FAST_INTEGRATOR).final_state
     forward = np.asarray(plant.states_by_unit(fwd_state)["digester"])
 
     def _rho(y):

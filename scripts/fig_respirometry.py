@@ -139,41 +139,25 @@ def _compute():
         return jax.vmap(lambda c: our_st(c, p))(sol.C)
 
     # ---- the library estimator ---------------------------------------------
-    # Every fit and profile point is one aquakin.calibrate call per start of the
-    # same fixed start grid as before (n_starts=1 each; the lowest loss is kept).
-    # The initial S_S (and, reduced model, S_H) are free_ic pools, fitted in log
-    # space and boxed to the old fSS range sigmoid(+-3) of the total COD. Rate
-    # bounds are calibrate's +-param_halfwidth box (log space) around each start;
-    # the half-widths reproduce the old lower bounds that the fits reach
-    # (khS 0.1 from its 0.3 start; storage muH 0.2 from its 1.0 start).
+    # Every fit and profile point is one aquakin.calibrate call over a fixed grid
+    # of explicit starts (OptimizerConfig(starts=...), one compiled objective; the
+    # lowest-loss optimum is kept). The loss is the Gaussian nll with the noise
+    # level estimated (sigma="estimate", the concentrated likelihood), so one fit
+    # gives the estimates, the noise std and the Laplace std together. The rate
+    # parameters are held to the bounds declared in the model files. The initial
+    # S_S (and, reduced model, S_H) are free_ic pools, fitted in log space and
+    # boxed to the fSS range sigmoid(+-3) of the total COD; they start from the
+    # same C0 for every start.
     F_LO, F_HI = float(jax.nn.sigmoid(-3.0)), float(jax.nn.sigmoid(3.0))
-    DR_HW, ST_HW = np.log(3.0), np.log(5.0)
 
-    def _calib(rx, obs, free, pools, hw, COD, t_d, our_d, start, sigma=None, laplace=False):
-        """One calibrate start; loss="mse" without sigma, "nll" with it. None if the solve fails."""
-        p0, C0 = start
-        try:
-            return aquakin.calibrate(
-                rx, C0, our_d, t_d, free, initial_params=p0, observation_fn=obs,
-                loss="mse" if sigma is None else "nll", sigma=sigma, use_priors=False,
-                free_ic=FreeICConfig(pools, bounds=(F_LO * COD, F_HI * COD)),
-                optimizer=OptimizerConfig(max_iter=300, param_halfwidth=hw),
-                laplace=LaplaceConfig(method="gauss_newton", include_ic=True) if laplace else False)
-        except RuntimeError:
-            return None
-
-    def _best(args, starts, sigma=None):
-        rs = [(_calib(*args, s, sigma=sigma), i) for i, s in enumerate(starts)]
-        rs = [(r, i) for r, i in rs if r is not None and np.isfinite(r.loss)]
-        return min(rs, key=lambda ri: ri[0].loss)
-
-    def _fit(args, starts):
-        """Multistart on the mean squared OUR residual (the old objective up to a
-        constant factor), then re-run the winning start as a Gaussian nll with
-        sigma fixed at that fit's residual RMS, for the Laplace std."""
-        r1, i = _best(args, starts)
-        sig = float(np.sqrt(r1.loss))
-        return _calib(*args, starts[i], sigma=sig, laplace=True), sig
+    def _calib(rx, obs, free, pools, COD, t_d, our_d, p0, C0, starts, laplace=False):
+        """One multistart fit from the explicit `starts` ({name: value} over `free`)."""
+        return aquakin.calibrate(
+            rx, C0, our_d, t_d, free, initial_params=p0, observation_fn=obs,
+            loss="nll", sigma="estimate", use_priors=False,
+            free_ic=FreeICConfig(pools, bounds=(F_LO * COD, F_HI * COD)),
+            optimizer=OptimizerConfig(max_iter=300, starts=starts),
+            laplace=LaplaceConfig(method="gauss_newton", include_ic=True) if laplace else False)
 
     def metrics(model, our):
         resid = np.asarray(model) - our
@@ -183,10 +167,10 @@ def _compute():
 
     # ---- fit reduced: free {muH, khS, S_S0, S_H0} ----------------------------
     def fit_dr(X_H, COD, t_d, our_d):
-        args = (rx_dr, our_dr, ["muH", "khS"], ["SS", "SH"], DR_HW, COD, t_d, our_d)
-        starts = [(dr_params(m, k), dr_C0(X_H, 0.25 * COD, 0.75 * COD))
-                  for m in (1.5, 2.5, 4.0) for k in (0.3, 1.0, 3.0)]
-        r, sig = _fit(args, starts)
+        starts = [{"muH": m, "khS": k} for m in (1.5, 2.5, 4.0) for k in (0.3, 1.0, 3.0)]
+        r = _calib(rx_dr, our_dr, ["muH", "khS"], ["SS", "SH"], COD, t_d, our_d,
+                   dr_params(2.5, 1.0), dr_C0(X_H, 0.25 * COD, 0.75 * COD), starts, laplace=True)
+        sig = float(np.asarray(r.sigma_estimate)[0])
         ic, sd, icsd = r.ic_named[0], r.params_named_std, r.ic_named_std[0]
         return dict(muH=r.params_named["muH"], khS=r.params_named["khS"],
                     S_S0=ic["SS"], S_H0=ic["SH"], fSS=ic["SS"] / (ic["SS"] + ic["SH"]),
@@ -195,10 +179,10 @@ def _compute():
 
     # ---- fit storage: free {muH, kSTO, muSTO, S_S0} --------------------------
     def fit_st(X_H, COD, t_d, our_d):
-        args = (rx_st, our_st, ["muH", "kSTO", "muSTO"], ["SS"], ST_HW, COD, t_d, our_d)
-        starts = [(st_params(m, k, 2.0), st_C0(X_H, 0.5 * COD))
-                  for m in (1.0, 2.5, 4.0) for k in (3.0, 10.0)]
-        r, sig = _fit(args, starts)
+        starts = [{"muH": m, "kSTO": k, "muSTO": 2.0} for m in (1.0, 2.5, 4.0) for k in (3.0, 10.0)]
+        r = _calib(rx_st, our_st, ["muH", "kSTO", "muSTO"], ["SS"], COD, t_d, our_d,
+                   st_params(2.5, 3.0, 2.0), st_C0(X_H, 0.5 * COD), starts, laplace=True)
+        sig = float(np.asarray(r.sigma_estimate)[0])
         ic, sd, icsd = r.ic_named[0], r.params_named_std, r.ic_named_std[0]
         return dict(muH=r.params_named["muH"], kSTO=r.params_named["kSTO"],
                     muSTO=r.params_named["muSTO"], S_S0=ic["SS"], fSS=ic["SS"] / COD,
@@ -232,23 +216,23 @@ def _compute():
                            dr_muH=fd["muH"], dr_r2=dr_r2, st_r2=st_r2))
 
     # ---- muH profile likelihood on PROFILE_WW for both models --------------
-    # muH is held at each grid value (left out of free_params) and the rest is
-    # re-fitted by calibrate as a Gaussian nll, with sigma fixed per structure at
-    # its own best-fit residual RMS; the profile is the nll rise above the fit,
-    # read against the 95% threshold PROF_DELTA = chi2_{1,0.95}/2.
+    # muH is held at each grid value (left out of free_params) and the rest,
+    # noise level included, is re-fitted by calibrate on the concentrated nll; the
+    # profile is the nll rise above the fit, (N/2) log(SSE/SSE_min), read against
+    # the 95% threshold PROF_DELTA = chi2_{1,0.95}/2.
     muH_rep, X_H, S_S, S_H = WW[PROFILE_WW]; COD = S_S + S_H
     t_np, our_np = curves[PROFILE_WW]; t_d, our_d = jnp.asarray(t_np), jnp.asarray(our_np)
     n_obs = int(t_np.size)
 
     def profile_dr(muH_fixed):
-        args = (rx_dr, our_dr, ["khS"], ["SS", "SH"], DR_HW, COD, t_d, our_d)
-        starts = [(dr_params(muH_fixed, k), dr_C0(X_H, 0.5 * COD, 0.5 * COD)) for k in (0.3, 1.0, 3.0)]
-        return float(_best(args, starts, sigma=per_dr[PROFILE_WW]["sigma"])[0].loss)
+        return float(_calib(rx_dr, our_dr, ["khS"], ["SS", "SH"], COD, t_d, our_d,
+                            dr_params(muH_fixed, 1.0), dr_C0(X_H, 0.5 * COD, 0.5 * COD),
+                            [{"khS": k} for k in (0.3, 1.0, 3.0)]).loss)
 
     def profile_st(muH_fixed):
-        args = (rx_st, our_st, ["kSTO", "muSTO"], ["SS"], ST_HW, COD, t_d, our_d)
-        starts = [(st_params(muH_fixed, k, 2.0), st_C0(X_H, 0.5 * COD)) for k in (3.0, 10.0)]
-        return float(_best(args, starts, sigma=per_st[PROFILE_WW]["sigma"])[0].loss)
+        return float(_calib(rx_st, our_st, ["kSTO", "muSTO"], ["SS"], COD, t_d, our_d,
+                            st_params(muH_fixed, 3.0, 2.0), st_C0(X_H, 0.5 * COD),
+                            [{"kSTO": k, "muSTO": 2.0} for k in (3.0, 10.0)]).loss)
 
     nll_dr = np.array([profile_dr(float(m)) for m in MU_GRID])
     nll_st = np.array([profile_st(float(m)) for m in MU_GRID])
@@ -257,8 +241,9 @@ def _compute():
     nll_st_ref = min(nll_st.min(), per_st[PROFILE_WW]["nll"])
     prof_dr, prof_st = nll_dr - nll_dr_ref, nll_st - nll_st_ref
     # the same profiles as SSE, for the old "within 10% of the minimum SSE" reading
-    sse = lambda nll, sig: 2.0 * sig ** 2 * (nll - n_obs * np.log(sig))
-    sse_dr = sse(nll_dr, per_dr[PROFILE_WW]["sigma"]); sse_st = sse(nll_st, per_st[PROFILE_WW]["sigma"])
+    # (inverting the concentrated nll = (N/2) log(SSE/N) + N/2)
+    sse = lambda nll: n_obs * np.exp(2.0 * nll / n_obs - 1.0)
+    sse_dr, sse_st = sse(nll_dr), sse(nll_st)
 
     # the free fit is the profile's own minimum (for the storage model it sits on
     # the muH bound, below the grid), so it is added to the grid for the intervals

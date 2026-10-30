@@ -49,7 +49,7 @@ def _compute():
     y0 = bsm1_warm_start(plant_c)
     yss = np.asarray(plant_c.solve((0.0, 150.0), t_eval=np.array([150.0]),
                                    params=params_c, y0=y0,
-                                   forward_fast=True).final_state)
+                                   forward_fast=True, integrator=common.FAST_INTEGRATOR).final_state)
 
     # 2) 14-day dry-weather dynamic from the steady state; save days 7-14
     plant = build_bsm1(model=asm1, use_takacs=True, settler_soluble_holdup=True, settler_composition_mode="lumped_tss")
@@ -61,10 +61,10 @@ def _compute():
     # days 7-14 at the benchmark 15-min output resolution.
     y_warm = np.asarray(plant.solve((0.0, 14.0), t_eval=np.array([14.0]),
                                     params=params, y0=jnp.asarray(yss),
-                                    forward_fast=True).final_state)
+                                    forward_fast=True, integrator=common.FAST_INTEGRATOR).final_state)
     teval = np.linspace(7.0, 14.0, 7 * 96 + 1)
     sol = plant.solve((0.0, 14.0), t_eval=teval, params=params,
-                      y0=jnp.asarray(y_warm), forward_fast=True)
+                      y0=jnp.asarray(y_warm), forward_fast=True, integrator=common.FAST_INTEGRATOR)
 
     eff = plant.stream(sol, "clarifier.overflow")
     Ce = np.asarray(eff.C)                    # (n_t, n_species)
@@ -93,16 +93,16 @@ def _compute():
     yss_nh = np.asarray(plant_nh_c.solve((0.0, 150.0), t_eval=np.array([150.0]),
                                          params=common.bsm1_params(plant_nh_c),
                                          y0=bsm1_warm_start(plant_nh_c),
-                                         forward_fast=True).final_state)
+                                         forward_fast=True, integrator=common.FAST_INTEGRATOR).final_state)
     plant_nh = build_bsm1(model=asm1, use_takacs=True, settler_soluble_holdup=False,
                           settler_composition_mode="lumped_tss")
     plant_nh.add_influent("feed", common.official_dry_influent(asm1))
     params_nh = common.bsm1_params(plant_nh)
     yw_nh = np.asarray(plant_nh.solve((0.0, 14.0), t_eval=np.array([14.0]),
                                       params=params_nh, y0=jnp.asarray(yss_nh),
-                                      forward_fast=True).final_state)
+                                      forward_fast=True, integrator=common.FAST_INTEGRATOR).final_state)
     sol_nh = plant_nh.solve((0.0, 14.0), t_eval=teval, params=params_nh,
-                            y0=jnp.asarray(yw_nh), forward_fast=True)
+                            y0=jnp.asarray(yw_nh), forward_fast=True, integrator=common.FAST_INTEGRATOR)
     eff_nh = plant_nh.stream(sol_nh, "clarifier.overflow")
     Ce_nh = np.asarray(eff_nh.C); Qe_nh = np.asarray(eff_nh.Q).reshape(-1)
     snh_nh = float((Ce_nh[:, si["SNH"]] * Qe_nh).sum() / Qe_nh.sum())   # flow-weighted avg

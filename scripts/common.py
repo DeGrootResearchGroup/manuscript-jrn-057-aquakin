@@ -55,6 +55,13 @@ def scaled_residual(F, y):
     F, y = np.asarray(F), np.asarray(y)
     return float(np.max(np.abs(F) / np.maximum(np.abs(y), RESID_FLOOR)))
 
+# --- Fast forward solves ---------------------------------------------------
+# Since aquakin 0.2.0 the plant's forward_fast path honours integrator.max_steps
+# (default 1e5); before, it always ran with forward_solve's own budget of 1e8. The
+# long fast runs here (300 d of BSM1, the digester horizon) need more than 1e5
+# steps, so every forward_fast=True solve passes this, the old budget.
+FAST_INTEGRATOR = aquakin.IntegratorConfig(max_steps=100_000_000)
+
 # --- Paths -----------------------------------------------------------------
 _HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(_HERE)
@@ -123,12 +130,11 @@ def _recompute_requested(name):
 # --- aquakin provenance ----------------------------------------------------
 # The paper describes the aquakin 0.2.0 release, so every cached result must be
 # computed against that commit. Point PYTHONPATH at a checkout of it (e.g.
-# ``git worktree add --detach ../aquakin-v0.2.0 e198ec1``); a recompute on any other
+# ``git worktree add --detach ../aquakin-v0.2.0 v0.2.0``); a recompute on any other
 # commit, or on a checkout with local edits, is refused unless
-# AQUAKIN_ALLOW_UNPINNED=1 is set. 0.2.0 is not tagged yet: e198ec1 is the merged
-# Laplace-covariance fix (#593); re-point the tag here once the release is cut.
+# AQUAKIN_ALLOW_UNPINNED=1 is set. 5936950 is the commit the v0.2.0 tag points to.
 AQUAKIN_PINNED_TAG = "v0.2.0"
-AQUAKIN_PINNED_COMMIT = "e198ec1"
+AQUAKIN_PINNED_COMMIT = "5936950"
 
 
 def aquakin_provenance():
@@ -183,6 +189,10 @@ def load_or_compute(name, compute_fn, recompute=None):
     os.makedirs(RESULTS_DIR, exist_ok=True)
     path = os.path.join(RESULTS_DIR, name + ".json")
     force = recompute if recompute is not None else _recompute_requested(name)
+    # Two scripts can share a cache (verification, calibration); under RECOMPUTE
+    # compute it once per run, and let the second script read the fresh file.
+    if recompute is None and name in _RECOMPUTED:
+        force = False
     if not force and os.path.exists(path):
         with open(path) as f:
             return json.load(f)
@@ -192,8 +202,30 @@ def load_or_compute(name, compute_fn, recompute=None):
     result = dict(result, _aquakin=prov)
     with open(path, "w") as f:
         json.dump(_to_jsonable(result), f, indent=1)
+    _RECOMPUTED.add(name)
     print(f"  [computed + cached] {os.path.relpath(path, ROOT)}")
+    # EQX_ON_ERROR=nan turns a failed solve into NaN rather than an error, so
+    # flag any NaN in a fresh result (some, e.g. an at-bound Laplace std, are
+    # legitimate; read the count before using the cache).
+    n_nan = _count_nan(result)
+    if n_nan:
+        print(f"  WARNING: {n_nan} NaN value(s) in {name}; check for a failed solve.")
     return result
+
+
+_RECOMPUTED = set()
+
+
+def _count_nan(x):
+    """Number of NaN floats in a nested result (the provenance block excluded)."""
+    if isinstance(x, dict):
+        return sum(_count_nan(v) for k, v in x.items() if k != "_aquakin")
+    if isinstance(x, (list, tuple)):
+        return sum(_count_nan(v) for v in x)
+    arr = np.asarray(x) if hasattr(x, "shape") else None
+    if arr is not None and arr.dtype.kind == "f":
+        return int(np.isnan(arr).sum())
+    return int(isinstance(x, float) and x != x)
 
 
 # --- Plotting --------------------------------------------------------------

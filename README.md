@@ -106,22 +106,18 @@ must come from that exact commit. The pin is set in `scripts/common.py`:
 
 ```python
 AQUAKIN_PINNED_TAG = "v0.2.0"
-AQUAKIN_PINNED_COMMIT = "e198ec1"
+AQUAKIN_PINNED_COMMIT = "5936950"
 ```
 
-Until the `v0.2.0` tag is published, the release is identified by commit
-`e198ec1` on aquakin's `main` branch. When the tag is cut, check out the tag
-instead of the commit; this README and `common.py` will be updated then.
-
-Clone aquakin next to this repository and check the pinned commit out as a
-detached worktree:
+The `v0.2.0` tag points to commit `5936950`. Clone aquakin next to this
+repository and check the tag out as a detached worktree:
 
 ```bash
 git clone https://github.com/DeGrootResearchGroup/aquakin.git ../aquakin
 ```
 
 ```bash
-git -C ../aquakin worktree add --detach ../aquakin-v0.2.0 e198ec1
+git -C ../aquakin worktree add --detach ../aquakin-v0.2.0 v0.2.0
 ```
 
 Then put that checkout first on `PYTHONPATH` whenever you run the scripts:
@@ -136,11 +132,6 @@ checkout has local edits. You can override this with `AQUAKIN_ALLOW_UNPINNED=1`,
 but results computed that way are not the paper's results. Each
 `results/<name>.json` records the aquakin version, commit, dirty flag and path
 it was computed with, under the `_aquakin` key.
-
-Some of the caches currently in `results/` were computed against earlier aquakin
-commits; their `_aquakin.commit` field shows which. All of them will be
-recomputed against the tagged `v0.2.0` release, and this note removed, before
-the paper is finalized.
 
 ## Reproducing the paper
 

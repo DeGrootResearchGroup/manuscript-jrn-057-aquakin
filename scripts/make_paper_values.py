@@ -278,7 +278,7 @@ def main():
     cmd("AdfdProj", f"{af['proj20x']:.0f}")
     cmd("AdfdFloor", sci(af["floor"]))
     cmd("AdfdPlantFloor", sci(af["plant_floor"]))
-    cmd("AdfdFloorRatio", f"{af['floor_ratio']:.0f}")
+    cmd("AdfdFloorRatio", f"{float(format(af['floor_ratio'], '.2g')):.0f}")   # two significant figures
     cmd("AdfdNrep", str(int(af["n_rep"])))
 
     # --- steady-state solver (PTC + fold) ---
@@ -383,7 +383,7 @@ def main():
     cmd("RespGuptaOverHi", f"{rs['gupta_overshoot_hi']:.1f}")
     # Laplace std of the reduced-model muH across the wastewaters, the fitted
     # total COD relative to the source study's, and the 95% profile intervals
-    # (nll rise 1.92 with sigma fixed at the best-fit RMS) on the profiled curve.
+    # (nll rise 1.92 on the concentrated likelihood, sigma profiled out) on the profiled curve.
     _ms = [dr[n]["muH_std"] for n in dr]
     cmd("RespDrMuStdLo", f"{min(_ms):.2f}")
     cmd("RespDrMuStdHi", f"{max(_ms):.2f}")
@@ -423,6 +423,9 @@ def main():
     p = _load("performance")
     cmd("PerfCompileS", f"{p['compile_s']:.1f}")
     cmd("PerfSolveS", f"{p['solve_s']:.1f}")
+    # compile split (trace + lower in JAX, then XLA) and the first call, compile + solve
+    cmd("PerfTraceS", f"{p['compile_lower_s']:.1f}")
+    cmd("PerfFirstCallS", f"{p['first_call_s']:.1f}")
     cmd("PerfNstate", str(int(p["n_state"])))
     cmd("PerfNparams", str(int(p["n_params"])))
     cmd("PerfADFactor", f"{p['ad_factor']:.1f}")
@@ -436,6 +439,7 @@ def main():
     cmd("PerfNruns", str(int(p["n_runs"])))
     import fig_performance as _perf
     cmd("PerfScaleNruns", words(p.get("scale_n_runs", _perf.SCALE_NRUNS)))
+    cmd("PerfScaleNcompile", words(p.get("scale_n_compile", _perf.SCALE_NCOMPILE)))
 
     with open(OUT, "w") as f:
         f.write("\n".join(L) + "\n")

@@ -4,52 +4,52 @@
  "batch": [
   {
    "dtmax": 0.0001,
-   "rel": 1.9516174950892624e-12,
+   "rel": 1.9519984680337245e-12,
    "finite": true
   },
   {
    "dtmax": 0.001,
-   "rel": 1.7480189796009054e-11,
+   "rel": 1.7478857177911163e-11,
    "finite": true
   },
   {
    "dtmax": 0.01,
-   "rel": 9.819160622177393e-10,
+   "rel": 9.819213772847023e-10,
    "finite": true
   },
   {
    "dtmax": null,
-   "rel": 9.819160622177393e-10,
+   "rel": 9.819206016325713e-10,
    "finite": true
   }
  ],
  "digester": [
   {
    "dtmax": 0.01,
-   "rel": 2.7972484311913477e-07,
+   "rel": 2.797248609468757e-07,
    "finite": true
   },
   {
    "dtmax": 0.1,
-   "rel": 2.719596809419193e-07,
+   "rel": 2.719596992890192e-07,
    "finite": true
   },
   {
    "dtmax": 1.0,
-   "rel": 5.7656350050030295e-08,
+   "rel": 5.765633367330297e-08,
    "finite": true
   },
   {
    "dtmax": null,
-   "rel": 5.7656351434895884e-08,
+   "rel": 5.7656333629054756e-08,
    "finite": true
   }
  ],
  "dig_rtol": 1e-08,
  "_aquakin": {
-  "version": "0.1.0",
-  "commit": "e198ec1412879be8e6ac731c9cb1284f5eabb404",
+  "version": "0.2.0",
+  "commit": "5936950cfe5f2a9c0d07ebd979d9d56dc48986fc",
   "dirty": false,
-  "path": "/Users/ctdegroot/aquakin-v0.1.1"
+  "path": "/Users/ctdegroot/aquakin-v0.2.0"
  }
 }

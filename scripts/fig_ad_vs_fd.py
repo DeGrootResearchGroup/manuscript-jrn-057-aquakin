@@ -8,7 +8,9 @@ two ways:
     solver-noise level at small step, so a step size must be tuned; the exact
     gradient needs no step and carries only the solver tolerance. On this
     well-resolved batch the floor is low; it rises steeply on a stiff,
-    recycle-coupled plant.
+    recycle-coupled plant, whose small-step error is irregular rather than flat.
+    Each floor is the median error at the best step and its two neighbours
+    (``fd_floor``).
 (b) Gradient cost. The reverse-mode gradient costs one adjoint pass regardless of
     the number of parameters; a finite-difference gradient costs two solves per
     parameter, so its cost grows linearly. Measured wall-clock per gradient.
@@ -27,6 +29,15 @@ OBS = ["SS", "SO", "SNO"]
 SIG = np.array([1.0, 0.1, 0.2])
 H_GRID = [1e-1, 3e-2, 1e-2, 3e-3, 1e-3, 3e-4, 1e-4, 3e-5, 1e-5,
           1e-6, 1e-7, 1e-8, 1e-9]
+
+
+def fd_floor(relerr):
+    """The finite-difference error floor: the median error at the best step and its
+    two grid neighbours. A single minimum can be a lucky cancellation (the plant
+    curve has no plateau, and dips once at h = 1e-4), so it is not used alone."""
+    e = np.asarray(relerr, float)
+    i = int(np.clip(np.argmin(e), 1, len(e) - 2))
+    return float(np.median(e[i - 1:i + 2]))
 
 
 def _compute():
@@ -89,7 +100,7 @@ def _compute():
             up = u_eval.at[j].add(h); um = u_eval.at[j].add(-h)
             g[j] = float((lfun(up) - lfun(um)) / (2 * h))
         relerr.append(float(np.linalg.norm(g - g_ad) / np.linalg.norm(g_ad)))
-    floor = float(min(relerr))
+    floor = fd_floor(relerr)
 
     # --- (b) cost scaling ---------------------------------------------------
     # Each trial times one AD gradient and one central-FD gradient at every parameter
@@ -174,7 +185,7 @@ def _compute():
             up = pth_eval.at[j].add(hp); um = pth_eval.at[j].add(-hp)
             g[j] = float((plj(up) - plj(um)) / (2 * hp))
         p_relerr.append(float(np.linalg.norm(g - pg_ad) / np.linalg.norm(pg_ad)))
-    p_floor = float(min(p_relerr))
+    p_floor = fd_floor(p_relerr)
 
     return {
         "h": H_GRID, "relerr": relerr, "floor": floor,
@@ -206,17 +217,20 @@ def main():
     prel = np.asarray(d["plant_relerr"])
     ax[0].loglog(h, rel, "o-", color="C0", ms=4, label="batch")
     ax[0].loglog(h, prel, "s-", color="C1", ms=4, label="BSM1 plant")
-    ax[0].axhline(d["floor"], color="C0", ls=":", lw=0.9, alpha=0.7)
-    ax[0].axhline(d["plant_floor"], color="C1", ls=":", lw=0.9, alpha=0.7)
-    # Floor labels sit at the large-step (left) end, where the curves are well above
-    # both floors, so they do not collide with the data or the dotted lines.
+    # The figure is drawn 11 in wide and shrunk to the text width, so the floor lines
+    # need a heavy weight to stay visible on the page.
+    for fl, col in ((d["floor"], "C0"), (d["plant_floor"], "C1")):
+        ax[0].axhline(fl, color=col, ls=(0, (1.2, 1.2)), lw=2.4, zorder=1)
     # the batch floor label goes below its line (room made by lowering the y-limit),
     # clear of the batch curve, which sits on the floor at small steps
     ax[0].annotate(f"floor ${_pow10(d['floor'])}$", (h[0], d["floor"]),
                    textcoords="offset points", xytext=(0, -4), va="top", color="C0")
     ax[0].set_ylim(bottom=d["floor"] / 8)
-    ax[0].annotate(f"floor ${_pow10(d['plant_floor'])}$", (h[0], d["plant_floor"]),
-                   textcoords="offset points", xytext=(0, -14), va="top", color="C1")
+    # the plant floor label goes at the small-step (right) end, below its line, where
+    # the plant curve is far above it and the batch curve still well below
+    ax[0].annotate(f"floor ${_pow10(d['plant_floor'])}$", (h[-1], d["plant_floor"]),
+                   textcoords="offset points", xytext=(-2, -4), va="top", ha="right",
+                   color="C1")
     ax[0].text(0.97, 0.95, "exact gradient (AD):\nno step to tune",
                transform=ax[0].transAxes, color="C3", ha="right", va="top")
     ax[0].set(xlabel="relative finite-difference step $h$",

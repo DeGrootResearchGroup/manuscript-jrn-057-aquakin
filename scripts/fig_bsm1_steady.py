@@ -57,7 +57,7 @@ def _compute():
     # forward integration to steady state
     Tss = 300.0
     sol = plant.solve((0.0, Tss), t_eval=np.array([Tss]), params=params, y0=y0,
-                      forward_fast=True)
+                      forward_fast=True, integrator=common.FAST_INTEGRATOR)
     yss = np.asarray(sol.final_state)
     sb = plant.states_by_unit(yss)
 

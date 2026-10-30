@@ -96,7 +96,7 @@ def _compute():
 
     def _fwd():
         return plant.solve((0.0, FWD_HORIZON_D), t_eval=np.array([FWD_HORIZON_D]), params=params,
-                           y0=y0, forward_fast=True)
+                           y0=y0, forward_fast=True, integrator=common.FAST_INTEGRATOR)
 
     ptc_ts, ss = _bench(_ptc, "state")
     y_star = np.asarray(ss.state)
@@ -135,7 +135,7 @@ def _compute():
     # grid until the fast solve's own end point meets the tolerance.
     for tm in t_samp[t_samp >= t_match]:
         yf = plant.solve((0.0, float(tm)), t_eval=np.array([float(tm)]), params=params,
-                         y0=y0, forward_fast=True).final_state
+                         y0=y0, forward_fast=True, integrator=common.FAST_INTEGRATOR).final_state
         if _resnorm(np.asarray(yf)) <= PTC_TOL:
             t_match = float(tm)
             break
@@ -144,7 +144,7 @@ def _compute():
 
     def _fwd_matched():
         return plant.solve((0.0, t_match), t_eval=np.array([t_match]), params=params,
-                           y0=y0, forward_fast=True)
+                           y0=y0, forward_fast=True, integrator=common.FAST_INTEGRATOR)
 
     fwdm_ts, fwdm_sol = _bench(_fwd_matched, "final_state")
     fwdm_t = _stat(fwdm_ts)
