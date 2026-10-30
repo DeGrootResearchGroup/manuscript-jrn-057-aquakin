@@ -41,6 +41,7 @@ write a PNG copy of each figure, which is not tracked.
 |---|---|
 | `bsm1_openloop_ss_reference.json` | published open-loop BSM1 steady-state reference values |
 | `bsm1_openloop_dyn_reference.json` | published open-loop BSM1 dry-weather dynamic reference (effluent averages, days 7–14) |
+| `copp2002_openloop_dry_simulators.json` | the same dry-weather effluent averages from five simulators (Copp, 2002, Table 10.2), for the inter-simulator spread |
 | `bsm1_asm1_parameters.json` | the fixed BSM1 ASM1 kinetic and stoichiometric parameter set (15 °C) |
 | `bsm1_dry_influent.csv` | BSM1 dry-weather influent, 15-minute samples, in aquakin's ASM1 species order |
 | `decay.yaml` | two-species first-order decay network used in the verification figure |
@@ -261,6 +262,9 @@ their original owners:
   Rosen and others). If you use them, cite Alex et al. (2008), *Benchmark
   Simulation Model no. 1 (BSM1)*, and acknowledge the Lund University
   implementation.
+- `data/copp2002_openloop_dry_simulators.json` is transcribed from Copp (2002),
+  *The COST Simulation Benchmark: Description and Simulator Manual*, Table 10.2.
+  Cite that report if you use it.
 - `data/gupta2018_fig4-1_OUR_digitized.csv` is digitized from the Gupta (2018)
   sources listed under [Data provenance](#data-provenance). Cite those sources
   if you use it.

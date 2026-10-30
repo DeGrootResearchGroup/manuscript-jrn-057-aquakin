@@ -109,6 +109,16 @@ def main():
     cmd("DynEffCOD", f"{dy['cod']:.2f}"); cmd("DynEffCODRef", f"{dy['cod_ref']:.2f}")
     cmd("DynEffTSS", f"{dy['tss']:.2f}"); cmd("DynEffTSSRef", f"{dy['tss_ref']:.2f}")
     cmd("DynEffWorstPct", pct(dy["worst_pct"]))
+    # The same averages from the benchmark's five independent simulator implementations
+    # (Copp 2002, Table 10.2). The text claims the deviation from the reference is smaller
+    # than their spread for every compared quantity; fail the build if that stops holding.
+    with open(os.path.join(common.DATA_DIR, "copp2002_openloop_dry_simulators.json")) as f:
+        _copp = json.load(f)["effluent_avg_conc"]
+    for _q, (_m, _r) in dy["comp"].items():
+        _v = _copp[_q]["values"]
+        assert abs(_m - _r) < max(_v) - min(_v), (_q, _m, _r, _v)
+    _tn = _copp["total N"]["values"]
+    cmd("DynCoppSpreadTN", f"{max(_tn) - min(_tn):.2f}")
     cmd("DynEQI", f"{dy['eqi']:.0f}"); cmd("DynEQIRef", f"{dy['eqi_ref']:.0f}")
     cmd("DynEQIPct", pct(dy["eqi_pct"], 2))
     cmd("DynOCI", f"{dy['oci']:.0f}"); cmd("DynOCIRef", f"{dy['oci_ref']:.0f}")
@@ -234,7 +244,6 @@ def main():
     cmd("DesignDOpt", f"{ds['D_opt']:.2f}")
     cmd("DesignDetFactor", f"{np.exp(ds['D_opt'] - ds['D_base']):.1f}")
     cmd("DesignNsamp", str(len(ds["t_opt"])))
-    cmd("DesignSSBase", f"{ds['SS0_base']:.0f}")
     cmd("DesignSSOpt", f"{ds['SS0_opt']:.0f}")
     cmd("DesignSSLo", f"{ds['ss_bounds'][0]:.0f}")
     cmd("DesignSSHi", f"{ds['ss_bounds'][1]:.0f}")
@@ -245,7 +254,7 @@ def main():
     cmd("DesignLateLo", f"{_t[_g + 1]:.0f}"); cmd("DesignLateHi", f"{_t[-1]:.0f}")
     _cb, _co = ds["crb_pct"]["base"], ds["crb_pct"]["opt"]
     cmd("DesignCrbMuBase", f"{_cb['muH']:.1f}"); cmd("DesignCrbMuOpt", f"{_co['muH']:.1f}")
-    cmd("DesignCrbEtagBase", f"{_cb['etag']:.1f}"); cmd("DesignCrbEtagOpt", f"{_co['etag']:.1f}")
+
     _eo = dict(zip(ds["free"], ds["emp_cv_opt_pct"]))
     cmd("DesignEmpMuOpt", f"{_eo['muH']:.1f}"); cmd("DesignEmpEtagOpt", f"{_eo['etag']:.1f}")
     cmd("DesignNmc", str(int(ds["n_mc"])))

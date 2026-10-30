@@ -60,7 +60,7 @@ def main():
     L.append(r"\caption{Open-loop BSM1 dry-weather dynamic validation: the "
              r"\texttt{aquakin} effluent averaged over days 7--14 against the "
              r"published benchmark reference. EQI is the effluent quality index "
-             r"(kg pollution units\,d$^{-1}$) and OCI the operational cost index, "
+             r"(kg pollution units\,d$^{-1}$) and OCI the dimensionless operational cost index, "
              r"both in their updated definitions.}"
              r"\label{tab:dynamic}")
     L.append(r"\begin{tabular}{lrrr}")
